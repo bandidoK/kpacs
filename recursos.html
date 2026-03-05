@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recursos Kp@cs – Accesibilidad y Ayudas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #121212;
+      --bg-card: #1d293b;
+      --bg-deep: #0f172a;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --primary-glow: rgba(59, 130, 246, 0.12);
+      --border: #2d3f55;
+      --radius: 0.75rem;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      background: var(--bg-deep);
+      padding: 1rem 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-area {
+      font-family: "Limelight", sans-serif;
+      font-size: 2rem;
+      color: var(--text-main);
+      letter-spacing: 0.03em;
+    }
+
+    .logo-area .at {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    /* ─── MAIN ─── */
+    main {
+      max-width: 72rem;
+      margin: 2.5rem auto;
+      padding: 0 1.25rem;
+    }
+
+    /* ─── HERO ─── */
+    .hero-section {
+      background: var(--bg-card);
+      padding: 3rem 2.5rem 2.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: var(--primary-glow);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-section h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-section h2 span {
+      color: var(--primary);
+    }
+
+    .hero-section p {
+      color: var(--text-muted);
+      max-width: 580px;
+      font-size: 0.95rem;
+    }
+
+    /* ─── STATS ─── */
+    .stats-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat-pill strong {
+      color: var(--primary);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    /* ─── SEARCH ─── */
+    .search-section {
+      background: var(--bg-card);
+      padding: 2rem 2.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-wrap {
+      display: flex;
+      gap: 0.75rem;
+      align-items: stretch;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.75rem;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #searchInput:focus {
+      border-color: var(--primary);
+    }
+
+    #searchInput::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn-kpc {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.85rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-kpc:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    /* Filter chips */
+    .filter-chips {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.25rem;
+    }
+
+    .chip {
+      padding: 0.3rem 0.85rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    /* ─── RESULTS COUNT ─── */
+    .results-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .results-meta strong {
+      color: var(--primary);
+    }
+
+    /* ─── NO RESULTS ─── */
+    #noResults {
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    #noResults .no-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ─── RESOURCE GRID ─── */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ─── RESOURCE CARD ─── */
+    .res-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.25s, transform 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+    }
+
+    .res-card:hover {
+      border-color: rgba(59, 130, 246, 0.45);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-top {
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .cat-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.65rem;
+      border-radius: 100px;
+      border: 1px solid transparent;
+    }
+
+    .cat-badge.estado {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+
+    .cat-badge.madrid {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fcd34d;
+    }
+
+    .cat-badge.empleo {
+      background: rgba(34, 197, 94, 0.08);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #86efac;
+    }
+
+    .cat-badge.vivienda {
+      background: rgba(168, 85, 247, 0.08);
+      border-color: rgba(168, 85, 247, 0.3);
+      color: #c4b5fd;
+    }
+
+    .cat-badge.salud {
+      background: rgba(244, 63, 94, 0.08);
+      border-color: rgba(244, 63, 94, 0.3);
+      color: #fda4af;
+    }
+
+    .cat-badge.educacion {
+      background: rgba(6, 182, 212, 0.08);
+      border-color: rgba(6, 182, 212, 0.3);
+      color: #67e8f9;
+    }
+
+    .cat-badge.legal {
+      background: rgba(251, 146, 60, 0.08);
+      border-color: rgba(251, 146, 60, 0.3);
+      color: #fdba74;
+    }
+
+    .cat-badge.digital {
+      background: rgba(99, 102, 241, 0.08);
+      border-color: rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+    }
+
+    .org-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .card-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+      word-break: break-all;
+    }
+
+    .card-link:hover {
+      color: #93c5fd;
+    }
+
+    .card-link .ext-icon {
+      flex-shrink: 0;
+    }
+
+    /* AI Summary */
+    .card-body {
+      padding: 1rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ai-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .ai-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 6px rgba(59, 130, 246, 0.7);
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.4
+      }
+    }
+
+    .ai-summary {
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .ai-summary.loading {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Tags */
+    .res-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .res-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 0.3rem;
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+    }
+
+    /* Card footer */
+    .card-footer {
+      padding: 0.85rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .visit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 0.45rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 700;
+      font-size: 0.78rem;
+      transition: background 0.2s;
+    }
+
+    .visit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .share-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.45rem 0.9rem;
+      border-radius: 0.375rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .share-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* ─── SECTION DIVIDER ─── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0 1.25rem;
+    }
+
+    .div-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .div-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg-deep);
+      padding: 1.25rem 6%;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 3rem;
+    }
+
+    .footer-logo {
+      font-family: "Limelight", sans-serif;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    .footer-logo span {
+      color: var(--primary);
+    }
+
+    .footer-tag {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px #22c55e;
+      animation: blink 2s infinite;
+    }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--bg-card);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 0.75rem;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.82rem;
+      color: var(--text-main);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      z-index: 9999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ─── SKELETON ─── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-deep) 25%, rgba(45, 63, 85, 0.5) 50%, var(--bg-deep) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      height: 0.85rem;
+      margin-bottom: 0.4rem;
+    }
+
+    @keyframes shimmer {
+      from {
+        background-position: 200% 0
+      }
+
+      to {
+        background-position: -200% 0
+      }
+    }
+
+    .skeleton:last-child {
+      width: 70%;
+    }
+
+    @media(max-width:700px) {
+      header {
+        padding: 1rem 5%;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .hero-section,
+      .search-section {
+        padding: 1.5rem;
+      }
+
+      .resources-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-wrap {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-area">KP<span class="at">@</span>CS</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="talento.html">Talento</a></li>
+        <li><a href="lugares.html">Lugares</a></li>
+        <li><a href="#">Recursos</a></li>
+        <li><a href="contacto.html" id="nav-contact">Contacto</a></li>
+        <li><a href="chat.html">Chat</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero-section">
+      <span class="section-tag">✦ Directorio Oficial</span>
+      <h2>Recursos <span>Kp@cs</span></h2>
+      <p>Directorio de recursos oficiales del <strong>Estado Español</strong> y la <strong>Comunidad de Madrid</strong>
+        sobre accesibilidad, discapacidad y ayudas. Cada enlace incluye un resumen generado por IA para que encuentres
+        lo que necesitas en segundos.</p>
+      <div class="stats-row">
+        <div class="stat-pill"><strong id="totalCount">—</strong> recursos oficiales</div>
+        <div class="stat-pill"><strong>2</strong> administraciones</div>
+        <div class="stat-pill"><strong>8</strong> categorías</div>
+        <div class="stat-pill">✦ Resúmenes IA</div>
+      </div>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="search-section">
+      <div class="search-wrap">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput"
+            placeholder="Busca por problema, necesidad o tipo de ayuda… ej: 'adaptar mi vehículo', 'reconocimiento discapacidad', 'empleo'">
+        </div>
+        <button class="btn-kpc" onclick="doSearch()">Buscar</button>
+      </div>
+      <div class="filter-chips" id="filterChips">
+        <button class="chip active" data-filter="all">Todos</button>
+        <button class="chip" data-filter="estado">🏛 Estado</button>
+        <button class="chip" data-filter="madrid">🏙 C. Madrid</button>
+        <button class="chip" data-filter="empleo">💼 Empleo</button>
+        <button class="chip" data-filter="vivienda">🏠 Vivienda</button>
+        <button class="chip" data-filter="salud">🏥 Salud</button>
+        <button class="chip" data-filter="educacion">🎓 Educación</button>
+        <button class="chip" data-filter="legal">⚖ Legal</button>
+        <button class="chip" data-filter="digital">💻 Digital</button>
+      </div>
+    </section>
+
+    <!-- RESULTS META -->
+    <div class="results-meta" id="resultsMeta">
+      Mostrando <strong id="shownCount">—</strong> recursos
+    </div>
+
+    <!-- NO RESULTS -->
+    <div id="noResults">
+      <div class="no-icon">🔎</div>
+      <p>No se encontraron recursos para esa búsqueda.</p>
+      <p style="font-size:0.8rem;margin-top:0.4rem;">Prueba con: <em>discapacidad, movilidad, empleo, vivienda, pensión,
+          certificado…</em></p>
+    </div>
+
+    <!-- RESOURCES CONTAINER -->
+    <div id="resourcesContainer"></div>
+
+  </main>
+
+  <footer>
+    <div class="footer-logo">KP<span>@</span>CS</div>
+    <div class="footer-tag">
+      <span class="live-dot"></span>
+      Recursos verificados · Resúmenes IA activos
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ══════════════════════════════════════════════════════════
+    //  RESOURCE DATABASE
+    // ══════════════════════════════════════════════════════════
+    const RESOURCES = [
+      // ── ESTADO GENERAL ──
+      {
+        id: 1, scope: 'estado', cat: 'legal',
+        org: 'Real Patronato sobre Discapacidad · IMSERSO',
+        title: 'Portal Oficial de Discapacidad – Real Patronato',
+        url: 'https://www.rpdiscapacidad.gob.es',
+        tags: ['normativa', 'derechos', 'IMSERSO', 'Constitución', 'inclusión'],
+        aiKey: 'rpdiscapacidad'
+      },
+      {
+        id: 2, scope: 'estado', cat: 'legal',
+        org: 'Ministerio de Derechos Sociales',
+        title: 'IMSERSO – Prestaciones Sociales y Económicas para Personas con Discapacidad',
+        url: 'https://imserso.es/pnc-prestaciones-subvenciones/prestaciones-sociales-economicas-personas-discapacidad',
+        tags: ['pensión no contributiva', 'prestaciones', 'subsidios', 'economía'],
+        aiKey: 'imserso_prestaciones'
+      },
+      {
+        id: 3, scope: 'estado', cat: 'empleo',
+        org: 'SEPE – Servicio Público de Empleo Estatal',
+        title: 'Empleo para Personas con Discapacidad – SEPE',
+        url: 'https://www.sepe.es/HomeSepe/encontrar-trabajo/empleo-para-personas-con-discapacidad.html',
+        tags: ['empleo', 'contratación', 'subvenciones', 'inserción laboral', 'trabajo'],
+        aiKey: 'sepe_empleo'
+      },
+      {
+        id: 4, scope: 'estado', cat: 'empleo',
+        org: 'SEPE',
+        title: 'Guía de Integración Laboral de Personas con Discapacidad',
+        url: 'https://www.sepe.es/HomeSepe/es/que-es-el-sepe/comunicacion-institucional/publicaciones/publicaciones-oficiales/listado-pub-empleo/integracion-laboral-discapacidad/guia-integracion-laboral-personas-discapacidad.html',
+        tags: ['guía', 'integración', 'contratos', 'bonificaciones', 'empresas', 'CEE'],
+        aiKey: 'sepe_guia'
+      },
+      {
+        id: 5, scope: 'estado', cat: 'legal',
+        org: 'SEPE',
+        title: 'Persona con Discapacidad – Subsidios y Prestaciones por Desempleo',
+        url: 'https://www.sepe.es/contenidos/personas/prestaciones/persona_con_discapacidad.html',
+        tags: ['desempleo', 'subsidio', 'RAI', 'Ingreso Mínimo Vital', 'prestaciones'],
+        aiKey: 'sepe_prestaciones'
+      },
+      {
+        id: 6, scope: 'estado', cat: 'legal',
+        org: 'IMSERSO – Sede Electrónica',
+        title: 'Sede Electrónica IMSERSO – Trámites y Convocatorias',
+        url: 'https://sede.imserso.gob.es/',
+        tags: ['sede electrónica', 'trámites online', 'convocatorias', 'subvenciones', 'termalismo'],
+        aiKey: 'imserso_sede'
+      },
+      {
+        id: 7, scope: 'estado', cat: 'legal',
+        org: 'Real Patronato sobre Discapacidad',
+        title: 'OADIS – Oficina de Atención a la Discapacidad',
+        url: 'https://www.rpdiscapacidad.gob.es/oadis/oadis.htm',
+        tags: ['OADIS', 'quejas', 'asesoramiento', 'discriminación', 'derechos', 'denuncias'],
+        aiKey: 'oadis'
+      },
+      {
+        id: 8, scope: 'estado', cat: 'legal',
+        org: 'Ministerio de Derechos Sociales',
+        title: 'Reconocimiento del Grado de Discapacidad – RD 888/2022',
+        url: 'https://www.mdsocialesa2030.gob.es/derechos-sociales/discapacidad/reconocimiento-del-grado-de-discapacidad.htm',
+        tags: ['grado discapacidad', 'certificado', 'valoración', 'reconocimiento', 'baremo'],
+        aiKey: 'grado_discapacidad'
+      },
+      {
+        id: 9, scope: 'estado', cat: 'legal',
+        org: 'BOE / Ministerio de Presidencia',
+        title: 'Texto Refundido Ley General de Derechos de Personas con Discapacidad (RDL 1/2013)',
+        url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2013-12632',
+        tags: ['ley', 'derechos', 'no discriminación', 'accesibilidad universal', 'legislación'],
+        aiKey: 'rdl_2013'
+      },
+      {
+        id: 10, scope: 'estado', cat: 'digital',
+        org: 'Ministerio de Administraciones Públicas',
+        title: 'Accesibilidad Web Sector Público – RD 1112/2018',
+        url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2018-12699',
+        tags: ['accesibilidad web', 'apps', 'sector público', 'WCAG', 'UNE 301549'],
+        aiKey: 'rd_1112'
+      },
+      {
+        id: 11, scope: 'estado', cat: 'digital',
+        org: 'Ministerio de Asuntos Económicos',
+        title: 'Ley 11/2023 – European Accessibility Act (Trasposición)',
+        url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2023-10482',
+        tags: ['accesibilidad digital', 'EAA', 'productos', 'servicios', '2025', 'directiva europea'],
+        aiKey: 'ley_11_2023'
+      },
+      {
+        id: 12, scope: 'estado', cat: 'legal',
+        org: 'BOE',
+        title: 'RD 193/2023 – Condiciones Básicas de Accesibilidad en Bienes y Servicios',
+        url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2023-7417',
+        tags: ['accesibilidad', 'bienes', 'servicios', 'condiciones básicas', 'establecimientos'],
+        aiKey: 'rd_193'
+      },
+      {
+        id: 13, scope: 'estado', cat: 'vivienda',
+        org: 'Ministerio de Transportes y Movilidad Sostenible',
+        title: 'Ayudas a la Accesibilidad en Rehabilitación de Viviendas (Plan de Recuperación)',
+        url: 'https://www.mitma.gob.es/vivienda/plan-de-recuperacion/programa-3-ayudas-a-la-rehabilitacion',
+        tags: ['rehabilitación', 'vivienda', 'ascensor', 'barreras arquitectónicas', 'comunidades de propietarios'],
+        aiKey: 'ayudas_vivienda'
+      },
+      {
+        id: 14, scope: 'estado', cat: 'salud',
+        org: 'Ministerio de Sanidad / IMSERSO',
+        title: 'Sistema para la Autonomía y Atención a la Dependencia (SAAD)',
+        url: 'https://imserso.es/imserso/autonomia/saad',
+        tags: ['dependencia', 'SAAD', 'atención', 'ayuda a domicilio', 'centros de día', 'residencias'],
+        aiKey: 'saad'
+      },
+      {
+        id: 15, scope: 'estado', cat: 'empleo',
+        org: 'Agencia Tributaria',
+        title: 'Deducciones y Beneficios Fiscales por Discapacidad – IRPF',
+        url: 'https://www.agenciatributaria.es/AEAT.internet/Inicio/La_Agencia_Tributaria/Campanas/Renta/Renta_2023/Informacion_del_programa/La_discapacidad_en_el_IRPF.shtml',
+        tags: ['IRPF', 'deducciones', 'fiscalidad', 'tributación', 'renta', 'impuestos', 'bonificaciones'],
+        aiKey: 'irpf_discapacidad'
+      },
+      {
+        id: 16, scope: 'estado', cat: 'educacion',
+        org: 'Ministerio de Educación',
+        title: 'Educación Inclusiva y Atención a la Diversidad',
+        url: 'https://www.educacionyfp.gob.es/educacion/sistema-educativo/principios-fines/inclusion-educativa.html',
+        tags: ['educación', 'inclusión', 'diversidad', 'necesidades especiales', 'NEE', 'becas', 'adaptaciones'],
+        aiKey: 'edu_inclusion'
+      },
+      {
+        id: 17, scope: 'estado', cat: 'legal',
+        org: 'Ministerio de Asuntos Sociales',
+        title: 'Convención ONU sobre Derechos de Personas con Discapacidad (ratificada España)',
+        url: 'https://www.rpdiscapacidad.gob.es/discapacidad-derechos-humanos/convencion-de-la-onu.htm',
+        tags: ['ONU', 'convención', 'derechos humanos', 'igualdad', 'internacional'],
+        aiKey: 'onu_convencion'
+      },
+      {
+        id: 18, scope: 'estado', cat: 'empleo',
+        org: 'TGSS – Tesorería General Seguridad Social',
+        title: 'Bonificaciones en Seguridad Social por Contratación de Personas con Discapacidad',
+        url: 'https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/Afiliacion/10549/10765',
+        tags: ['Seguridad Social', 'bonificaciones', 'cuotas', 'contratación', 'empresa', 'autónomos'],
+        aiKey: 'ss_bonificaciones'
+      },
+
+      // ── COMUNIDAD DE MADRID ──
+      {
+        id: 19, scope: 'madrid', cat: 'madrid',
+        org: 'Comunidad de Madrid – Consejería de Familia',
+        title: 'Portal Discapacidad Comunidad de Madrid',
+        url: 'https://www.comunidad.madrid/servicios/asuntos-sociales/discapacidad',
+        tags: ['Comunidad Madrid', 'portal', 'servicios sociales', 'discapacidad', 'trámites'],
+        aiKey: 'cm_portal'
+      },
+      {
+        id: 20, scope: 'madrid', cat: 'vivienda',
+        org: 'Comunidad de Madrid',
+        title: 'Ayudas Accesibilidad y Supresión de Barreras en Edificios (Comunidad de Madrid)',
+        url: 'https://www.comunidad.madrid/servicios/urbanismo-vivienda/ayudas-rehabilitacion-edificios',
+        tags: ['ascensor', 'rampa', 'barreras arquitectónicas', 'edificios', 'comunidades de vecinos', 'obras'],
+        aiKey: 'cm_barreras'
+      },
+      {
+        id: 21, scope: 'madrid', cat: 'madrid',
+        org: 'Comunidad de Madrid – Consejería de Familia y Juventud',
+        title: 'Reconocimiento Grado Discapacidad en la Comunidad de Madrid',
+        url: 'https://www.comunidad.madrid/servicios/asuntos-sociales/reconocimiento-grado-discapacidad',
+        tags: ['certificado', 'grado', 'valoración', 'trámite', 'solicitud', 'baremo'],
+        aiKey: 'cm_grado'
+      },
+      {
+        id: 22, scope: 'madrid', cat: 'madrid',
+        org: 'Comunidad de Madrid',
+        title: 'Ayudas para la Autonomía Personal y Accesibilidad a Personas con Discapacidad',
+        url: 'https://www.comunidad.madrid/servicios/asuntos-sociales/ayudas-autonomia-personal-accesibilidad-personas-discapacidad',
+        tags: ['autonomía personal', 'ayudas técnicas', 'silla de ruedas', 'audífonos', 'adaptación vehículo'],
+        aiKey: 'cm_autonomia'
+      },
+      {
+        id: 23, scope: 'madrid', cat: 'empleo',
+        org: 'Comunidad de Madrid – Emplea Madrid',
+        title: 'Empleo de Personas con Discapacidad – Comunidad de Madrid',
+        url: 'https://www.comunidad.madrid/servicios/empleo/empleo-personas-discapacidad',
+        tags: ['empleo', 'Comunidad Madrid', 'inserción laboral', 'CEE', 'inclusión', 'orientación'],
+        aiKey: 'cm_empleo'
+      },
+      {
+        id: 24, scope: 'madrid', cat: 'salud',
+        org: 'Comunidad de Madrid – Consejería de Sanidad',
+        title: 'Atención a la Dependencia y Cuidados – Comunidad de Madrid',
+        url: 'https://www.comunidad.madrid/servicios/asuntos-sociales/dependencia',
+        tags: ['dependencia', 'cuidados', 'SAD', 'centros de día', 'residencias', 'mayores', 'atención domiciliaria'],
+        aiKey: 'cm_dependencia'
+      },
+      {
+        id: 25, scope: 'madrid', cat: 'educacion',
+        org: 'Comunidad de Madrid – Consejería de Educación',
+        title: 'Educación Especial e Inclusiva en la Comunidad de Madrid',
+        url: 'https://www.comunidad.madrid/servicios/educacion/educacion-especial',
+        tags: ['educación especial', 'ACNEAE', 'PT', 'AL', 'centros', 'integración', 'adaptaciones curriculares'],
+        aiKey: 'cm_educacion'
+      },
+      {
+        id: 26, scope: 'madrid', cat: 'madrid',
+        org: 'Comunidad de Madrid',
+        title: 'Tarjeta de Estacionamiento para Personas con Movilidad Reducida',
+        url: 'https://www.comunidad.madrid/servicios/transporte/tarjeta-estacionamiento-personas-movilidad-reducida',
+        tags: ['aparcamiento', 'estacionamiento', 'movilidad', 'tarjeta azul', 'parking', 'coche', 'vehículo'],
+        aiKey: 'cm_tarjeta'
+      },
+      {
+        id: 27, scope: 'madrid', cat: 'vivienda',
+        org: 'Ayuntamiento de Madrid',
+        title: 'Plan Adapta – Ayudas Eliminación Barreras Arquitectónicas (Ayuntamiento Madrid)',
+        url: 'https://www.madrid.es/portales/munimadrid/es/Inicio/Vivienda-y-urbanismo/Obras-y-proyectos/Plan-Adapta/?vgnextfmt=default&vgnextoid=2f3b00f62a6d9710VgnVCM2000001f4a900aRCRD&vgnextchannel=0e0fe0346e85a510VgnVCM1000000b205a0aRCRD',
+        tags: ['Plan Adapta', 'Ayuntamiento Madrid', 'barreras', 'ascensor', 'rampa', 'accesibilidad urbana'],
+        aiKey: 'adapta'
+      },
+      {
+        id: 28, scope: 'madrid', cat: 'madrid',
+        org: 'Comunidad de Madrid',
+        title: 'Ayudas de Movilidad – Transporte en Taxi y Adaptación de Vehículos',
+        url: 'https://gestionesytramites.madrid.org/cs/Satellite?c=CM_ConvocaPrestac_FA&cid=1109168957164&noMostrarML=true&pageid=1255430110099&pagename=ServiciosAE%2FCM_ConvocaPrestac_FA%2FPSAE_fichaConvocaPrestac&vest=1255430110099',
+        tags: ['taxi', 'transporte', 'movilidad reducida', 'vehículo adaptado', 'desplazamiento', 'ayuda económica'],
+        aiKey: 'cm_movilidad'
+      },
+      {
+        id: 29, scope: 'madrid', cat: 'legal',
+        org: 'Comunidad de Madrid',
+        title: 'Arbitraje y Reclamaciones en Materia de Discapacidad',
+        url: 'https://www.comunidad.madrid/servicios/asuntos-sociales/arbitraje-reclamaciones-discapacidad',
+        tags: ['reclamaciones', 'arbitraje', 'quejas', 'derechos', 'denuncias', 'discriminación'],
+        aiKey: 'cm_arbitraje'
+      },
+      {
+        id: 30, scope: 'madrid', cat: 'salud',
+        org: 'Comunidad de Madrid – Salud Madrid',
+        title: 'Atención Temprana – Comunidad de Madrid',
+        url: 'https://www.comunidad.madrid/servicios/asuntos-sociales/atencion-temprana',
+        tags: ['atención temprana', 'niños', 'desarrollo', 'intervención', 'discapacidad infantil', 'bebés'],
+        aiKey: 'cm_temprana'
+      }
+    ];
+
+    // ══════════════════════════════════════════════════════════
+    //  AI SUMMARIES (pre-generated, no API call needed on load)
+    // ══════════════════════════════════════════════════════════
+    const SUMMARIES = {
+      rpdiscapacidad: 'Portal central del Real Patronato sobre Discapacidad, organismo estatal adscrito al Ministerio de Sanidad. Recoge normativa vigente (RDL 1/2013, RD 888/2022), publicaciones técnicas, la Oficina de Atención a la Discapacidad (OADIS) y la Convención ONU. Punto de partida esencial para conocer el marco de derechos y recursos disponibles en España.',
+      imserso_prestaciones: 'El IMSERSO gestiona las Prestaciones No Contributivas (PNC) de invalidez para personas sin recursos con grado de discapacidad ≥65%, así como prestaciones por hijo a cargo con discapacidad ≥33%. Aquí encontrarás normativa, cuantías actualizadas, requisitos de acceso y formularios de solicitud. Imprescindible si no tienes cotización suficiente para una pensión contributiva.',
+      sepe_empleo: 'El SEPE ofrece subvenciones a empresas que contraten indefinidamente a personas con discapacidad, bonificaciones en Seguridad Social, ayudas para adaptación del puesto de trabajo y apoyo a Centros Especiales de Empleo (CEE). También cubre el autoempleo con capitalización de prestación. Las competencias en gestión corresponden a cada comunidad autónoma.',
+      sepe_guia: 'Guía oficial completa que resume todos los incentivos a la contratación de personas con discapacidad: tipos de contrato, cuotas de reserva del 2% en empresas de +50 trabajadores, subvenciones por inserción, unidades de apoyo en CEE y medidas alternativas. Útil tanto para trabajadores como para RRHH y empresas.',
+      sepe_prestaciones: 'Página del SEPE específica para personas con discapacidad en situación de desempleo. Explica el acceso al Ingreso Mínimo Vital (IMV), subsidios por desempleo y la extinción de la RAI (derogada en nov. 2024). Orienta sobre qué alternativas existen y cómo solicitarlas presencial o telemáticamente con certificado digital.',
+      imserso_sede: 'Sede electrónica oficial del IMSERSO para realizar trámites sin desplazarte: solicitud de PNC, convocatorias de termalismo y turismo para personas con discapacidad, subvenciones a entidades y consulta de expedientes. Necesitas DNI electrónico, Cl@ve o certificado digital. Actualiza convocatorias anuales.',
+      oadis: 'La OADIS (Oficina de Atención a la Discapacidad) atiende quejas, consultas y denuncias de personas con discapacidad que han sufrido discriminación, principalmente en telecomunicaciones, sociedad de la información y servicios públicos. Proporciona asesoramiento gratuito y puede derivar al sistema arbitral.',
+      grado_discapacidad: 'Información oficial sobre el procedimiento de reconocimiento del grado de discapacidad según el RD 888/2022. Explica quiénes pueden solicitarlo, qué documentación se necesita, cómo funciona el baremo y qué porcentajes dan acceso a diferentes beneficios (33%, 45%, 65%, 75%). Se tramita ante el organismo competente de cada Comunidad Autónoma.',
+      rdl_2013: 'Texto legal fundamental: el Texto Refundido de la Ley General de derechos de las personas con discapacidad. Establece los principios de igualdad de oportunidades, no discriminación y accesibilidad universal. Define los tipos de ajustes razonables, el sistema de arbitraje y las infracciones. Referencia obligada para conocer tus derechos.',
+      rd_1112: 'Real Decreto que obliga a todos los organismos del sector público a tener sus webs y apps móviles accesibles según el estándar UNE-EN 301549 (equivalente a WCAG 2.1). Si una administración no cumple, puedes reclamar. Incluye declaración de accesibilidad obligatoria y mecanismo de queja.',
+      ley_11_2023: 'Trasposición española de la Directiva Europea de Accesibilidad (EAA). Desde junio 2025 los productos y servicios digitales del sector privado (banca, transporte, e-commerce, telefonía) deben ser accesibles. Sanciones de hasta 1M€ por incumplimiento. Clave para usuarios que enfrentan barreras digitales.',
+      rd_193: 'Regula las condiciones básicas de accesibilidad en tiendas, hoteles, restaurantes, cines, transportes y todo tipo de establecimientos abiertos al público. Incluye plazas de aparcamiento reservadas, mostradores adaptados, señalización táctil y sistemas de audiodescripción. De aplicación progresiva hasta 2025-2033.',
+      ayudas_vivienda: 'El Programa 3 del Plan de Rehabilitación del Gobierno de España financia con hasta el 50% del coste (máx. 8.000€/vivienda) obras de mejora de accesibilidad: instalación de ascensores, rampas, plataformas elevadoras, supresión de escalones y adecuación de baños. Se tramita a través de cada Comunidad Autónoma.',
+      saad: 'El Sistema para la Autonomía y Atención a la Dependencia (Ley 39/2006) ofrece servicios y prestaciones a personas en situación de dependencia (Grado I, II, III): ayuda a domicilio, centros de día, plazas residenciales y prestaciones económicas para cuidadores. La valoración la realiza cada Comunidad Autónoma.',
+      irpf_discapacidad: 'La Agencia Tributaria recoge todas las deducciones aplicables en la Declaración de la Renta por discapacidad: mínimo personal incrementado (desde 3.000€ hasta 12.000€ adicionales), reducción por movilidad reducida, deducción por trabajador con discapacidad activo y exención de prestaciones. Revísalo antes de hacer tu declaración.',
+      edu_inclusion: 'El Ministerio de Educación regula la atención educativa al alumnado con Necesidades Específicas de Apoyo Educativo (ACNEAE): adaptaciones curriculares, apoyos de PT y AL, escolarización en centros ordinarios y de educación especial. Incluye información sobre becas específicas para alumnos con discapacidad.',
+      onu_convencion: 'España ratificó en 2007 la Convención de la ONU sobre los Derechos de las Personas con Discapacidad, de rango constitucional. Garantiza derechos como la vida independiente, la participación política, la educación inclusiva y el trabajo. El Comité de la ONU supervisa su cumplimiento periódicamente.',
+      ss_bonificaciones: 'La Tesorería General de la Seguridad Social publica las bonificaciones en cuotas empresariales por contratar a personas con discapacidad: hasta 4.500€/año para contratos indefinidos ordinarios, más en caso de discapacidad severa o mujer. El empleador las aplica directamente en la liquidación mensual.',
+      cm_portal: 'Portal central de la Comunidad de Madrid para todo lo relativo a discapacidad: reconocimiento del grado, centros de atención, ayudas económicas, empleo protegido y servicios sociales especializados. Permite iniciar trámites online con DNI electrónico o Cl@ve. Primer punto de entrada para residentes en la región.',
+      cm_barreras: 'La Comunidad de Madrid concede subvenciones a comunidades de propietarios para la supresión de barreras arquitectónicas: instalación de ascensores, salvaescaleras, rampas y obras de adaptación. Los requisitos incluyen acuerdo de la junta de vecinos. La convocatoria es anual y se publica en el BOCM.',
+      cm_grado: 'Trámite para solicitar o revisar el grado de discapacidad en la Comunidad de Madrid ante los Equipos de Valoración y Orientación (EVO). Explica la documentación médica y social necesaria, plazos y cómo gestionar la cita previa. El certificado reconocido en Madrid es válido en toda España.',
+      cm_autonomia: 'Ayudas económicas individuales para personas con discapacidad en situación de vulnerabilidad social en la Comunidad de Madrid. Cubren: adaptación de vehículo, taxi para formación o trabajo, ayudas técnicas (sillas de ruedas, comunicadores, prótesis), estancias en residencias y adecuación funcional de la vivienda.',
+      cm_empleo: 'La Comunidad de Madrid impulsa la inserción laboral de personas con discapacidad mediante orientación profesional, itinerarios individualizados, subvenciones a Centros Especiales de Empleo (CEE) y empresas ordinarias. Incluye también emprendimiento y autoempleo. Acceso a través de las oficinas del Servicio Público de Empleo autonómico.',
+      cm_dependencia: 'La Consejería de Familia gestiona las solicitudes de valoración de dependencia y el acceso a los servicios del Catálogo SAAD en Madrid: teleasistencia, ayuda a domicilio, centros de día, atención residencial y prestación económica para cuidadores familiares. Plazo de resolución: máx. 6 meses.',
+      cm_educacion: 'La Consejería de Educación de Madrid regula la atención al alumnado con necesidades educativas especiales: orientación en colegios de educación especial o integración en ordinarios con apoyos, adaptaciones de acceso y curriculares, equipos de orientación específicos (EOEP motóricos, auditivos, visuales, etc.).',
+      cm_tarjeta: 'La tarjeta de aparcamiento para personas con movilidad reducida permite estacionar en zonas reservadas y en zonas de pago sin límite de tiempo. Se tramita en la Comunidad de Madrid si tienes un grado de discapacidad reconocido con afectación a la movilidad. Válida en toda la Unión Europea.',
+      adapta: 'El Plan Adapta del Ayuntamiento de Madrid financia con hasta el 50% del presupuesto (máx. 6.000€) obras de eliminación de barreras arquitectónicas en viviendas particulares para personas con discapacidad física o movilidad reducida: rampas, barras de apoyo, platos de ducha, puertas ensanchadas. Convocatoria anual.',
+      cm_movilidad: 'Prestación económica periódica de la Comunidad de Madrid para personas con discapacidad ≥33% que tienen graves dificultades para usar transporte colectivo. Cubre desplazamientos en taxi. Exige empadronamiento en la Comunidad y rentas inferiores al 70% del SMI. También subvenciona la adaptación de vehículos a motor.',
+      cm_arbitraje: 'Sistema de resolución extrajudicial de conflictos en materia de discapacidad en la Comunidad de Madrid: discriminación en acceso a bienes, servicios o entornos. Permite presentar reclamaciones ante la administración sin necesidad de abogado. Resolución en plazos más cortos que la vía judicial.',
+      cm_temprana: 'Los Centros de Atención Temprana (CAT) de la Comunidad de Madrid ofrecen atención gratuita a niños de 0 a 6 años con discapacidad o riesgo de padecerla: logopedia, fisioterapia, psicología, trabajo social y orientación a familias. La derivación puede hacerse desde pediatría, educación o servicios sociales.'
+    };
+
+    // ══════════════════════════════════════════════════════════
+    //  STATE
+    // ══════════════════════════════════════════════════════════
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    // ══════════════════════════════════════════════════════════
+    //  RENDER
+    // ══════════════════════════════════════════════════════════
+    function catLabel(cat) {
+      const m = { estado: 'estado', madrid: 'madrid', empleo: 'empleo', vivienda: 'vivienda', salud: 'salud', educacion: 'educacion', legal: 'legal', digital: 'digital' };
+      return m[cat] || cat;
+    }
+    function catEmoji(cat) {
+      const m = { estado: '🏛', madrid: '🏙', empleo: '💼', vivienda: '🏠', salud: '🏥', educacion: '🎓', legal: '⚖', digital: '💻' };
+      return m[cat] || '📌';
+    }
+    function scopeLabel(scope) { return scope === 'madrid' ? 'C. Madrid' : 'Estado'; }
+
+    function buildCard(r) {
+      const summary = SUMMARIES[r.aiKey] || 'Resumen no disponible.';
+      const tagsHtml = r.tags.map(t => `<span class="res-tag">${t}</span>`).join('');
+      const shortUrl = r.url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+      return `
+  <div class="res-card" data-id="${r.id}" data-scope="${r.scope}" data-cat="${r.cat}" data-tags="${r.tags.join(' ').toLowerCase()}" data-title="${r.title.toLowerCase()}">
+    <div class="card-top">
+      <div class="card-meta">
+        <span class="cat-badge ${catLabel(r.cat)}">${catEmoji(r.cat)} ${r.cat}</span>
+        <span class="cat-badge ${r.scope === 'madrid' ? 'madrid' : 'estado'}">${scopeLabel(r.scope)}</span>
+        <span class="org-label">🏢 ${r.org}</span>
+      </div>
+      <p class="card-title">${r.title}</p>
+      <a class="card-link" href="${r.url}" target="_blank" rel="noopener">
+        <span class="ext-icon">🔗</span> ${shortUrl}
+      </a>
+    </div>
+    <div class="card-body">
+      <p class="ai-label"><span class="ai-dot"></span> Resumen IA</p>
+      <p class="ai-summary">${summary}</p>
+      <div class="res-tags">${tagsHtml}</div>
+    </div>
+    <div class="card-footer">
+      <a class="visit-btn" href="${r.url}" target="_blank" rel="noopener">Visitar →</a>
+      <button class="share-btn" onclick="copyLink('${r.url}')">📋 Copiar enlace</button>
+    </div>
+  </div>`;
+    }
+
+    function getFiltered() {
+      const q = currentSearch.toLowerCase().trim();
+      return RESOURCES.filter(r => {
+        const matchFilter = currentFilter === 'all' || r.cat === currentFilter || r.scope === currentFilter;
+        if (!matchFilter) return false;
+        if (!q) return true;
+        return (
+          r.title.toLowerCase().includes(q) ||
+          r.tags.some(t => t.toLowerCase().includes(q)) ||
+          r.org.toLowerCase().includes(q) ||
+          (SUMMARIES[r.aiKey] || '').toLowerCase().includes(q)
+        );
+      });
+    }
+
+    function renderAll() {
+      const filtered = getFiltered();
+      const container = document.getElementById('resourcesContainer');
+      const noRes = document.getElementById('noResults');
+      const shownCount = document.getElementById('shownCount');
+
+      shownCount.textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        noRes.style.display = 'block';
+        return;
+      }
+      noRes.style.display = 'none';
+
+      // Group by scope
+      const estado = filtered.filter(r => r.scope === 'estado');
+      const madrid = filtered.filter(r => r.scope === 'madrid');
+
+      let html = '';
+
+      if (estado.length > 0) {
+        html += `<div class="section-divider"><span class="div-label">🏛 Recursos del Estado Español</span><div class="div-line"></div></div>`;
+        html += `<div class="resources-grid">${estado.map(buildCard).join('')}</div>`;
+      }
+      if (madrid.length > 0) {
+        html += `<div class="section-divider"><span class="div-label">🏙 Recursos de la Comunidad de Madrid</span><div class="div-line"></div></div>`;
+        html += `<div class="resources-grid">${madrid.map(buildCard).join('')}</div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  SEARCH & FILTER
+    // ══════════════════════════════════════════════════════════
+    function doSearch() {
+      currentSearch = document.getElementById('searchInput').value;
+      renderAll();
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSearch();
+    });
+
+    document.getElementById('searchInput').addEventListener('input', e => {
+      if (e.target.value === '') {
+        currentSearch = '';
+        renderAll();
+      }
+    });
+
+    document.getElementById('filterChips').querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentFilter = chip.dataset.filter;
+        renderAll();
+      });
+    });
+
+    // ══════════════════════════════════════════════════════════
+    //  COPY LINK
+    // ══════════════════════════════════════════════════════════
+    function copyLink(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('✅ Enlace copiado al portapapeles');
+      }).catch(() => {
+        showToast('❌ No se pudo copiar');
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  INIT
+    // ══════════════════════════════════════════════════════════
+    document.getElementById('totalCount').textContent = RESOURCES.length;
+    renderAll();
+  </script>
+</body>
+
+</html>

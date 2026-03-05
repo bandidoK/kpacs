@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talento Kp@cs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #121212;
+      --bg-card: #1d293b;
+      --bg-deep: #0f172a;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --primary-glow: rgba(59, 130, 246, 0.12);
+      --border: #2d3f55;
+      --radius: 0.75rem;
+      --success: #22c55e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      background: var(--bg-deep);
+      padding: 1rem 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 0.0625rem solid var(--border);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      font-family: "Limelight", sans-serif;
+      font-size: 2rem;
+      color: var(--text-main);
+      letter-spacing: 0.03em;
+    }
+
+    .logo-area .at {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    /* ─── MAIN ─── */
+    main {
+      max-width: 68.75rem;
+      margin: 2.5rem auto;
+      padding: 0 1.25rem;
+    }
+
+    section {
+      background: var(--bg-card);
+      padding: 2.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      box-shadow: 0 0.625rem 0.9375rem -0.1875rem rgba(0, 0, 0, 0.3);
+    }
+
+    /* ─── HERO ─── */
+    .hero-inner {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-inner::before {
+      content: '';
+      position: absolute;
+      top: -5rem;
+      right: -5rem;
+      width: 20rem;
+      height: 20rem;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: var(--primary-glow);
+      border: 0.0625rem solid rgba(59, 130, 246, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 6.25rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-inner h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-inner h2 span {
+      color: var(--primary);
+    }
+
+    .hero-inner p {
+      color: var(--text-muted);
+      max-width: 32.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* ─── SECTION TITLE ─── */
+    .sec-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .sec-title::before {
+      content: '';
+      display: inline-block;
+      width: 0.25rem;
+      height: 1.1rem;
+      background: var(--primary);
+      border-radius: 0.625rem;
+    }
+
+    /* ─── ERROR ─── */
+    .error-banner {
+      display: none;
+      background: rgba(239, 68, 68, 0.08);
+      border: 0.0625rem solid rgba(239, 68, 68, 0.3);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.82rem;
+      color: #fca5a5;
+      margin-bottom: 1.25rem;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .error-banner.visible {
+      display: flex;
+    }
+
+    /* ─── DROP ZONE ─── */
+    .drop-zone {
+      border: 0.125rem dashed var(--border);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.25s ease;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--primary);
+      background: var(--primary-glow);
+      transform: translateY(-0.125rem);
+      box-shadow: 0 0.5rem 1.875rem rgba(59, 130, 246, 0.1);
+    }
+
+    .drop-icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      background: var(--primary-glow);
+      border: 0.0625rem solid rgba(59, 130, 246, 0.35);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin: 0 auto 1.2rem;
+      transition: all 0.25s;
+    }
+
+    .drop-zone:hover .drop-icon {
+      background: rgba(59, 130, 246, 0.2);
+      transform: scale(1.05);
+    }
+
+    .drop-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .drop-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .format-pills {
+      display: flex;
+      gap: 0.4rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .fmt-pill {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.65rem;
+      border: 0.0625rem solid var(--border);
+      border-radius: 6.25rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── LOADER ─── */
+    .loader-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .spinner {
+      width: 1.125rem;
+      height: 1.125rem;
+      border: 0.125rem solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .progress-bar {
+      height: 0.375rem;
+      background: var(--bg-deep);
+      border-radius: 0.625rem;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+      border-radius: 0.625rem;
+      width: 0;
+    }
+
+    .progress-fill.animating {
+      animation: progress 2.8s ease forwards;
+    }
+
+    @keyframes progress {
+      from {
+        width: 0;
+      }
+
+      to {
+        width: 100%;
+      }
+    }
+
+    .loader-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .loader-step {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      opacity: 0;
+    }
+
+    .loader-step.visible {
+      animation: stepIn 0.4s ease forwards;
+    }
+
+    @keyframes stepIn {
+      from {
+        opacity: 0;
+        transform: translateX(-0.5rem);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .step-dot {
+      width: 0.4375rem;
+      height: 0.4375rem;
+      border-radius: 50%;
+      background: var(--primary);
+      flex-shrink: 0;
+      box-shadow: 0 0 0.5rem rgba(59, 130, 246, 0.7);
+    }
+
+    /* ─── RESULTS ─── */
+    #results-section {
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(1rem);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Buttons */
+    .btn-kpc {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+      margin: 0.3125rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-kpc:hover {
+      background: var(--primary-dark);
+      transform: translateY(-0.0625rem);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-muted);
+      border: 0.0625rem solid var(--border);
+      padding: 0.6rem 1.25rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.82rem;
+      transition: all 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Results topbar */
+    .results-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0;
+    }
+
+    .results-topbar h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .results-topbar h3 span {
+      color: var(--primary);
+    }
+
+    /* Profile card */
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      padding-top: 1.75rem;
+      border-top: 0.0625rem solid var(--border);
+      margin-top: 1.5rem;
+    }
+
+    .profile-avatar {
+      width: 4.25rem;
+      height: 4.25rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-dark), #38bdf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 0.1875rem rgba(59, 130, 246, 0.25);
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .profile-role {
+      font-size: 0.82rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 0.2rem;
+    }
+
+    .profile-meta {
+      display: flex;
+      gap: 1.25rem;
+      margin-top: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .score-box {
+      background: var(--bg-deep);
+      border: 0.0625rem solid rgba(59, 130, 246, 0.3);
+      border-radius: 0.75rem;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .score-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 0.3rem;
+    }
+
+    /* Summary */
+    .summary-block {
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-deep);
+      border-radius: 0.5rem;
+      border-left: 0.25rem solid var(--primary);
+    }
+
+    .block-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .summary-text {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      line-height: 1.8;
+    }
+
+    /* Grid */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 43.75rem) {
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 1rem 5%;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+    }
+
+    .grid-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sub-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    /* Skills */
+    .skills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .skill-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.375rem;
+      border: 0.0625rem solid transparent;
+      transition: all 0.2s;
+    }
+
+    .skill-tag.tech {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+
+    .skill-tag.soft {
+      background: rgba(34, 197, 94, 0.08);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #86efac;
+    }
+
+    .skill-tag.lang {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fcd34d;
+    }
+
+    /* Experience */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .exp-item {
+      padding: 0.9rem 1rem;
+      background: var(--bg-deep);
+      border-radius: 0.5rem;
+      border-left: 0.1875rem solid var(--primary);
+      transition: background 0.2s;
+    }
+
+    .exp-item:hover {
+      background: #0c1525;
+    }
+
+    .exp-company {
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .exp-role {
+      font-size: 0.78rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 0.15rem;
+    }
+
+    .exp-date {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    /* Highlights */
+    .hl-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .hl-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.7rem 0.9rem;
+      background: var(--bg-deep);
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      border: 0.0625rem solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .hl-item:hover {
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .hl-ico {
+      flex-shrink: 0;
+      font-size: 1rem;
+      margin-top: 0.0625rem;
+    }
+
+    .hl-text strong {
+      color: #93c5fd;
+      font-weight: 700;
+    }
+
+    /* Education */
+    .edu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .edu-item {
+      background: var(--bg-deep);
+      border-radius: 0.5rem;
+      padding: 0.9rem 1rem;
+      border: 0.0625rem solid var(--border);
+      transition: border-color 0.2s;
+    }
+
+    .edu-item:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .edu-degree {
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .edu-school {
+      font-size: 0.78rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 0.15rem;
+    }
+
+    .edu-year {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    /* Languages */
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+      gap: 0.65rem;
+    }
+
+    .lang-item {
+      background: var(--bg-deep);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      border: 0.0625rem solid var(--border);
+    }
+
+    .lang-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .lang-level {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .lang-bar {
+      height: 0.25rem;
+      background: var(--border);
+      border-radius: 0.625rem;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .lang-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+      border-radius: 0.625rem;
+    }
+
+    /* hidden */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg-deep);
+      padding: 1.25rem 10%;
+      border-top: 0.0625rem solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .footer-logo {
+      font-family: "Limelight", sans-serif;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    .footer-logo span {
+      color: var(--primary);
+    }
+
+    .footer-tag {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .live-dot {
+      width: 0.4375rem;
+      height: 0.4375rem;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0.375rem #22c55e;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-area">KP<span class="at">@</span>CS</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Talento</a></li>
+        <li><a href="lugares.html">Lugares</a></li>
+        <li><a href="recursos.html">Recursos</a></li>
+        <li><a href="contacto.html" id="nav-contact">Contacto</a></li>
+        <li><a href="chat.html">Chat</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section>
+      <div class="hero-inner">
+        <span class="section-tag">✦ AI Powered</span>
+        <h2>Talento <span>Kp@cs</span></h2>
+        <p>Espacio dedicado a visibilizar las capacidades y el potencial de cada individuo. Sube tu CV y obtén un
+          análisis inteligente con tus puntos fuertes al instante.</p>
+      </div>
+    </section>
+
+    <!-- UPLOAD SECTION -->
+    <section id="upload-section">
+      <h3 class="sec-title">Analizar CV</h3>
+
+      <div class="error-banner" id="errorBanner">
+        <span>⚠</span>
+        <span id="errorMsg">Error al procesar el CV.</span>
+      </div>
+
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" />
+        <div class="drop-icon">📄</div>
+        <p class="drop-title">Arrastra tu CV aquí</p>
+        <p class="drop-sub">o haz clic para seleccionar un archivo</p>
+        <div class="format-pills">
+          <span class="fmt-pill">PDF</span>
+          <span class="fmt-pill">DOC</span>
+          <span class="fmt-pill">DOCX</span>
+          <span class="fmt-pill">TXT</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOADER SECTION -->
+    <section id="loader-section" class="hidden">
+      <div class="loader-title">
+        <div class="spinner"></div>
+        Analizando tu CV…
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="loader-steps" id="loaderSteps">
+        <div class="loader-step"><span class="step-dot"></span>Leyendo documento…</div>
+        <div class="loader-step"><span class="step-dot"></span>Extrayendo experiencia y formación…</div>
+        <div class="loader-step"><span class="step-dot"></span>Identificando habilidades clave…</div>
+        <div class="loader-step"><span class="step-dot"></span>Generando resumen ejecutivo…</div>
+      </div>
+    </section>
+
+    <!-- RESULTS SECTION -->
+    <section id="results-section" class="hidden">
+
+      <!-- Topbar + profile in same card -->
+      <div class="results-topbar">
+        <h3>Resumen del <span>Talento</span></h3>
+        <button class="btn-outline" id="resetBtn">↩ Nuevo CV</button>
+      </div>
+
+      <div class="profile-row">
+        <div class="profile-avatar" id="avatarInitials">--</div>
+        <div class="profile-info">
+          <p class="profile-name" id="profileName">–</p>
+          <p class="profile-role" id="profileRole">–</p>
+          <div class="profile-meta" id="profileMeta"></div>
+        </div>
+        <div class="score-box">
+          <p class="score-num" id="scoreNum">–</p>
+          <p class="score-label">Puntuación<br>Perfil</p>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-block">
+        <p class="block-label">📝 Resumen ejecutivo</p>
+        <p class="summary-text" id="summaryText">–</p>
+      </div>
+
+    </section>
+
+    <!-- RESULTS GRID -->
+    <div id="results-grid" class="hidden">
+      <div class="results-grid" style="margin-top:0;">
+
+        <!-- LEFT COL -->
+        <div class="grid-col">
+
+          <section>
+            <p class="sub-title">⭐ Puntos Destacados</p>
+            <div class="hl-list" id="hlList"></div>
+          </section>
+
+          <section>
+            <p class="sub-title">💼 Experiencia</p>
+            <div class="exp-list" id="expList"></div>
+          </section>
+
+        </div>
+
+        <!-- RIGHT COL -->
+        <div class="grid-col">
+
+          <section>
+            <p class="sub-title">🛠 Habilidades</p>
+            <div class="skills-wrap" id="skillsWrap"></div>
+          </section>
+
+          <section>
+            <p class="sub-title">🎓 Formación</p>
+            <div class="edu-list" id="eduList"></div>
+            <p class="sub-title" style="margin-top:1.5rem;">🌍 Idiomas</p>
+            <div class="lang-grid" id="langGrid"></div>
+          </section>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-logo">KP<span>@</span>CS</div>
+    <div class="footer-tag">
+      <span class="live-dot"></span>
+      Análisis AI activo
+    </div>
+  </footer>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    function show(id) { $(id).classList.remove('hidden'); }
+    function hide(id) { $(id).classList.add('hidden'); }
+
+    function initials(name) {
+      return (name || '').split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+    }
+
+    // ── FILE READ ──
+    async function readFile(file) {
+      return new Promise((resolve, reject) => {
+        if (file.type === 'application/pdf') {
+          const r = new FileReader();
+          r.onload = e => resolve({ type: 'pdf', data: e.target.result.split(',')[1], name: file.name });
+          r.onerror = reject;
+          r.readAsDataURL(file);
+        } else {
+          const r = new FileReader();
+          r.onload = e => resolve({ type: 'text', data: e.target.result, name: file.name });
+          r.onerror = reject;
+          r.readAsText(file);
+        }
+      });
+    }
+
+    // ── CLAUDE API ──
+    async function analyzeCV(fi) {
+      const sys = `Eres un experto en RRHH. Analiza el CV y responde SOLO con JSON válido sin texto extra ni backticks:
+{
+  "name":"Nombre completo",
+  "role":"Cargo principal",
+  "location":"Ciudad, País o ''",
+  "email":"email o ''",
+  "score":82,
+  "summary":"Resumen 2-3 frases",
+  "highlights":[
+    {"icon":"🏆","text":"Highlight con <strong>palabra clave</strong>"},
+    {"icon":"🚀","text":"..."},
+    {"icon":"💡","text":"..."},
+    {"icon":"🎯","text":"..."}
+  ],
+  "skills":{"tech":["skill"],"soft":["habilidad"],"lang":["Idioma Nivel"]},
+  "experience":[{"company":"Empresa","role":"Cargo","date":"2020–2023"}],
+  "education":[{"degree":"Título","school":"Centro","year":"2018"}],
+  "languages":[{"name":"Español","level":"Nativo","pct":100}]
+}
+Si no es un CV: {"error":"No es un CV válido"}.`;
+
+      let messages;
+      if (fi.type === 'pdf') {
+        messages = [{
+          role: 'user', content: [
+            { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: fi.data } },
+            { type: 'text', text: 'Analiza este CV.' }
+          ]
+        }];
+      } else {
+        messages = [{ role: 'user', content: `Analiza este CV:\n\n${fi.data}` }];
+      }
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: sys, messages })
+      });
+
+      if (!res.ok) throw new Error(`API ${res.status}`);
+      const data = await res.json();
+      const txt = data.content.map(b => b.text || '').join('');
+      return JSON.parse(txt.replace(/```json|```/g, '').trim());
+    }
+
+    // ── RENDER ──
+    function renderResults(d) {
+      $('avatarInitials').textContent = initials(d.name);
+      $('profileName').textContent = d.name || '–';
+      $('profileRole').textContent = d.role || '–';
+      $('scoreNum').textContent = d.score || '–';
+
+      const meta = $('profileMeta');
+      meta.innerHTML = '';
+      if (d.location) meta.innerHTML += `<span class="meta-item">📍 ${d.location}</span>`;
+      if (d.email) meta.innerHTML += `<span class="meta-item">✉ ${d.email}</span>`;
+
+      $('summaryText').textContent = d.summary || '–';
+
+      $('hlList').innerHTML = (d.highlights || []).map(h =>
+        `<div class="hl-item"><span class="hl-ico">${h.icon || '•'}</span><span class="hl-text">${h.text}</span></div>`
+      ).join('');
+
+      const sk = $('skillsWrap');
+      sk.innerHTML = '';
+      (d.skills?.tech || []).forEach(s => sk.innerHTML += `<span class="skill-tag tech">${s}</span>`);
+      (d.skills?.soft || []).forEach(s => sk.innerHTML += `<span class="skill-tag soft">${s}</span>`);
+      (d.skills?.lang || []).forEach(s => sk.innerHTML += `<span class="skill-tag lang">${s}</span>`);
+
+      $('expList').innerHTML = (d.experience || []).map(e =>
+        `<div class="exp-item"><p class="exp-company">${e.company}</p><p class="exp-role">${e.role}</p><p class="exp-date">${e.date}</p></div>`
+      ).join('');
+
+      $('eduList').innerHTML = (d.education || []).map(e =>
+        `<div class="edu-item"><p class="edu-degree">${e.degree}</p><p class="edu-school">${e.school}</p><p class="edu-year">${e.year}</p></div>`
+      ).join('');
+
+      $('langGrid').innerHTML = (d.languages || []).map(l =>
+        `<div class="lang-item"><p class="lang-name">${l.name}</p><p class="lang-level">${l.level}</p><div class="lang-bar"><div class="lang-fill" style="width:${l.pct || 50}%"></div></div></div>`
+      ).join('');
+
+      show('results-section');
+      show('results-grid');
+    }
+
+    // ── FLOW ──
+    async function processFile(file) {
+      $('errorBanner').classList.remove('visible');
+      hide('upload-section');
+      hide('results-section');
+      hide('results-grid');
+
+      // restart loader
+      const pf = $('progressFill');
+      pf.classList.remove('animating');
+      void pf.offsetWidth;
+      pf.classList.add('animating');
+
+      const steps = $('loaderSteps').querySelectorAll('.loader-step');
+      steps.forEach(s => s.classList.remove('visible'));
+      const delays = [200, 900, 1600, 2200];
+      delays.forEach((d, i) => setTimeout(() => steps[i]?.classList.add('visible'), d));
+
+      show('loader-section');
+
+      try {
+        const fi = await readFile(file);
+        await new Promise(r => setTimeout(r, 2800));
+        const res = await analyzeCV(fi);
+
+        hide('loader-section');
+
+        if (res.error) {
+          $('errorMsg').textContent = res.error;
+          $('errorBanner').classList.add('visible');
+          show('upload-section');
+          return;
+        }
+
+        renderResults(res);
+
+      } catch (err) {
+        hide('loader-section');
+        $('errorMsg').textContent = 'Error al procesar el CV. Comprueba tu conexión e inténtalo.';
+        $('errorBanner').classList.add('visible');
+        show('upload-section');
+        console.error(err);
+      }
+    }
+
+    // ── EVENTS ──
+    $('fileInput').addEventListener('change', e => {
+      if (e.target.files[0]) processFile(e.target.files[0]);
+    });
+
+    const dz = $('dropZone');
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault(); dz.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+    });
+
+    $('resetBtn').addEventListener('click', () => {
+      hide('results-section');
+      hide('results-grid');
+      $('errorBanner').classList.remove('visible');
+      $('fileInput').value = '';
+      show('upload-section');
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Chat Kp@ces — Comunidad accesible de personas con discapacidad">
+<title>Chat Kp@ces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════
+   KPACES DESIGN SYSTEM
+════════════════════════════════════════════ */
+:root {
+  --bg-main:#121212; --bg-card:#1d293b; --bg-deep:#0f172a;
+  --text-main:#f1f5f9; --text-muted:#94a3b8;
+  --primary:#3b82f6; --primary-dark:#2563eb; --primary-glow:rgba(59,130,246,0.12);
+  --border:#2d3f55; --radius:.75rem;
+  --success:#22c55e; --warning:#f59e0b; --danger:#ef4444;
+  --online:#22c55e; --away:#f59e0b; --offline:#64748b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg-main);color:var(--text-main);overflow:hidden}
+
+/* ── SKIP LINK ── */
+.skip{position:absolute;top:-100px;left:0;background:var(--primary);color:#fff;padding:.5rem 1rem;border-radius:0 0 .5rem 0;z-index:9999;transition:top .2s}
+.skip:focus{top:0}
+
+/* ── HEADER ── */
+header{height:54px;background:var(--bg-deep);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;border-bottom:1px solid var(--border);position:relative;z-index:600;flex-shrink:0}
+.logo{font-family:"Limelight",sans-serif;font-size:1.6rem;color:var(--text-main);text-decoration:none;letter-spacing:.03em}
+.logo .at{color:var(--primary)}
+nav ul{display:flex;list-style:none;gap:1.5rem}
+nav a{text-decoration:none;color:var(--text-muted);font-weight:600;font-size:.85rem;transition:color .2s}
+nav a:hover,nav a.active{color:var(--primary)}
+.h-right{display:flex;align-items:center;gap:.75rem}
+.btn-sm{padding:.35rem .9rem;border-radius:.375rem;border:none;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:transparent;color:var(--text-muted);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+
+/* ════════════════════════════════════════════
+   AUTH SCREEN
+════════════════════════════════════════════ */
+#authScreen{position:fixed;inset:0;background:var(--bg-main);z-index:800;display:flex;flex-direction:column;overflow-y:auto}
+#authScreen.hidden{display:none}
+.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 1rem;min-height:calc(100vh - 54px)}
+.auth-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:420px;padding:2.25rem;box-shadow:0 20px 60px rgba(0,0,0,.4);position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);pointer-events:none}
+.auth-logo{font-family:"Limelight",sans-serif;font-size:2rem;text-align:center;margin-bottom:.25rem}
+.auth-logo .at{color:var(--primary)}
+.auth-tagline{text-align:center;font-size:.82rem;color:var(--text-muted);margin-bottom:1.75rem}
+.auth-tabs{display:flex;background:var(--bg-deep);border-radius:.5rem;padding:.2rem;gap:.2rem;margin-bottom:1.5rem}
+.auth-tab{flex:1;padding:.5rem;border:none;border-radius:.375rem;background:transparent;color:var(--text-muted);font-size:.83rem;font-weight:600;cursor:pointer;transition:all .2s}
+.auth-tab.active{background:var(--primary);color:#fff}
+.section-tag{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--primary);background:var(--primary-glow);border:1px solid rgba(59,130,246,.3);padding:.15rem .6rem;border-radius:100px;margin-bottom:1rem}
+.form-group{margin-bottom:.9rem}
+.form-label{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:.35rem}
+.form-input{width:100%;padding:.65rem .9rem;background:var(--bg-deep);border:1px solid var(--border);border-radius:.5rem;color:var(--text-main);font-family:inherit;font-size:.88rem;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--primary)}
+.form-input::placeholder{color:var(--text-muted)}
+.pw-wrap{position:relative}
+.pw-toggle{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;padding:.2rem}
+.btn-full{width:100%;padding:.72rem;border-radius:.5rem;border:none;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;margin-bottom:.6rem}
+.btn-full.primary{background:var(--primary);color:#fff}
+.btn-full.primary:hover{background:var(--primary-dark)}
+.divider{display:flex;align-items:center;gap:.75rem;margin:.75rem 0;font-size:.72rem;color:var(--text-muted)}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.social-btns{display:flex;flex-direction:column;gap:.5rem}
+.btn-social{width:100%;padding:.65rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-deep);color:var(--text-main);font-size:.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:all .2s}
+.btn-social:hover{border-color:var(--primary);color:var(--primary)}
+.btn-social.google:hover{border-color:#ea4335;color:#ea4335}
+.btn-social.github:hover{border-color:#888;color:#ccc}
+.form-error{font-size:.73rem;color:var(--danger);margin-top:.3rem;display:none}
+.form-error.show{display:block}
+.auth-switch{text-align:center;font-size:.78rem;color:var(--text-muted);margin-top:.75rem}
+.auth-switch a{color:var(--primary);cursor:pointer;font-weight:600;text-decoration:none}
+
+/* Avatar chooser */
+.avatar-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+.av-opt{width:36px;height:36px;border-radius:50%;background:var(--bg-deep);border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all .2s}
+.av-opt.selected,.av-opt:hover{border-color:var(--primary);transform:scale(1.1)}
+
+/* ════════════════════════════════════════════
+   CHAT APP
+════════════════════════════════════════════ */
+#chatApp{display:flex;height:calc(100vh - 54px);opacity:0;transition:opacity .4s}
+#chatApp.ready{opacity:1}
+
+/* ── ROOMS SIDEBAR ── */
+#roomsPanel{width:260px;min-width:260px;background:var(--bg-deep);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:transform .3s}
+.rp-header{padding:.9rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.rp-user{display:flex;align-items:center;gap:.65rem;margin-bottom:.85rem}
+.user-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary-dark),#38bdf8);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;position:relative}
+.status-dot{position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;border:2px solid var(--bg-deep)}
+.dot-online{background:var(--online)}
+.dot-away{background:var(--away)}
+.dot-offline{background:var(--offline)}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-status{font-size:.65rem;color:var(--text-muted)}
+.settings-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem;padding:.2rem;border-radius:.25rem;transition:color .2s}
+.settings-btn:hover{color:var(--primary)}
+.rp-search{position:relative;margin-bottom:.75rem}
+.rp-search input{width:100%;padding:.5rem .5rem .5rem 2.1rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:.5rem;color:var(--text-main);font-size:.78rem;outline:none;transition:border-color .2s}
+.rp-search input:focus{border-color:var(--primary)}
+.rp-search::before{content:'🔍';position:absolute;left:.55rem;top:50%;transform:translateY(-50%);font-size:.75rem;pointer-events:none}
+.rp-section{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--text-muted);padding:.5rem 1rem .25rem;display:flex;align-items:center;justify-content:space-between}
+.rp-section button{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;transition:color .2s;padding:.1rem .2rem}
+.rp-section button:hover{color:var(--primary)}
+.rooms-list{flex:1;overflow-y:auto;padding:0 .5rem .5rem}
+.rooms-list::-webkit-scrollbar{width:3px}
+.rooms-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.room-item{padding:.55rem .6rem;border-radius:.4rem;cursor:pointer;display:flex;align-items:center;gap:.6rem;transition:background .2s;position:relative;margin-bottom:.15rem}
+.room-item:hover{background:rgba(255,255,255,.04)}
+.room-item.active{background:rgba(59,130,246,.12);border-left:3px solid var(--primary);padding-left:.35rem}
+.room-icon{font-size:1rem;flex-shrink:0;width:26px;text-align:center}
+.room-meta{flex:1;min-width:0}
+.room-name{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.room-preview{font-size:.68rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.room-badge{background:var(--primary);color:#fff;font-size:.58rem;font-weight:700;padding:.1rem .4rem;border-radius:100px;flex-shrink:0}
+.online-item{padding:.4rem .6rem;border-radius:.4rem;cursor:pointer;display:flex;align-items:center;gap:.6rem;transition:background .2s;margin-bottom:.1rem}
+.online-item:hover{background:rgba(255,255,255,.04)}
+.online-item.active{background:rgba(59,130,246,.1)}
+.oi-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;position:relative}
+.oi-name{font-size:.78rem;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oi-status{font-size:.62rem;color:var(--text-muted)}
+
+/* ── MAIN CHAT ── */
+#chatMain{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg-main)}
+.chat-topbar{height:52px;background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1rem;gap:.75rem;flex-shrink:0}
+.ct-back{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;display:none;transition:color .2s}
+.ct-back:hover{color:var(--primary)}
+.ct-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;position:relative}
+.ct-info{flex:1;min-width:0}
+.ct-name{font-size:.92rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-sub{font-size:.68rem;color:var(--text-muted)}
+.ct-actions{display:flex;gap:.4rem}
+.icon-btn{width:32px;height:32px;background:none;border:1px solid var(--border);border-radius:.375rem;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s}
+.icon-btn:hover{background:var(--primary-glow);border-color:var(--primary);color:var(--primary)}
+
+/* Messages */
+#messagesWrap{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.4rem}
+#messagesWrap::-webkit-scrollbar{width:4px}
+#messagesWrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.msg-day{text-align:center;font-size:.65rem;color:var(--text-muted);padding:.5rem 0;display:flex;align-items:center;gap:.5rem}
+.msg-day::before,.msg-day::after{content:'';flex:1;height:1px;background:var(--border)}
+.msg-row{display:flex;gap:.5rem;align-items:flex-end;max-width:100%;animation:msgIn .25s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg-row.own{flex-direction:row-reverse}
+.msg-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;align-self:flex-end}
+.msg-block{max-width:72%;display:flex;flex-direction:column}
+.msg-row.own .msg-block{align-items:flex-end}
+.msg-sender{font-size:.65rem;color:var(--text-muted);margin-bottom:.2rem;padding:0 .6rem}
+.bubble{padding:.55rem .85rem;border-radius:1rem;font-size:.85rem;line-height:1.55;word-break:break-word;position:relative}
+.bubble-other{background:var(--bg-card);border:1px solid var(--border);border-bottom-left-radius:.3rem;color:var(--text-main)}
+.bubble-own{background:var(--primary);color:#fff;border-bottom-right-radius:.3rem}
+.bubble-ai{background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(6,182,212,.1));border:1px solid rgba(59,130,246,.3);border-bottom-left-radius:.3rem;color:var(--text-main)}
+.bubble-system{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:#fcd34d;border-radius:.5rem;font-size:.78rem;text-align:center;padding:.4rem .75rem}
+.bubble-warn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:.5rem;font-size:.78rem;text-align:center;padding:.4rem .75rem}
+.msg-meta{font-size:.6rem;color:var(--text-muted);padding:0 .6rem;margin-top:.15rem;display:flex;align-items:center;gap:.3rem}
+.msg-row.own .msg-meta{justify-content:flex-end}
+.msg-status{font-size:.7rem}
+.ai-badge{font-size:.6rem;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#93c5fd;padding:.1rem .4rem;border-radius:100px;display:inline-flex;align-items:center;gap:.2rem;margin-bottom:.3rem}
+.ai-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--primary);box-shadow:0 0 5px var(--primary);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Typing indicator */
+.typing-row{display:flex;gap:.5rem;align-items:center}
+.typing-bubble{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;border-bottom-left-radius:.3rem;padding:.5rem .8rem;display:flex;gap:.3rem;align-items:center}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:typingBounce 1.4s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+/* AI suggestion chips */
+.suggestion-row{padding:.5rem 1rem;display:flex;gap:.4rem;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--bg-main)}
+.sug-chip{padding:.3rem .75rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.72rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+.sug-chip:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-glow)}
+
+/* Input area */
+.chat-input-area{padding:.65rem 1rem;background:var(--bg-card);border-top:1px solid var(--border);flex-shrink:0}
+.input-row{display:flex;gap:.5rem;align-items:flex-end}
+.attach-btn,.emoji-btn{width:34px;height:34px;background:none;border:1px solid var(--border);border-radius:.5rem;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:all .2s}
+.attach-btn:hover,.emoji-btn:hover{border-color:var(--primary);color:var(--primary)}
+.msg-input{flex:1;padding:.55rem .85rem;background:var(--bg-deep);border:1px solid var(--border);border-radius:.75rem;color:var(--text-main);font-family:inherit;font-size:.88rem;outline:none;resize:none;max-height:120px;min-height:36px;transition:border-color .2s;line-height:1.5}
+.msg-input:focus{border-color:var(--primary)}
+.msg-input::placeholder{color:var(--text-muted)}
+.send-btn{width:36px;height:36px;background:var(--primary);border:none;border-radius:.5rem;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:all .2s}
+.send-btn:hover{background:var(--primary-dark);transform:scale(1.05)}
+.send-btn:disabled{background:var(--border);cursor:not-allowed;transform:none}
+.input-hints{font-size:.62rem;color:var(--text-muted);margin-top:.35rem;display:flex;gap:.75rem}
+
+/* ── INFO PANEL ── */
+#infoPanel{width:0;background:var(--bg-card);border-left:1px solid var(--border);overflow:hidden;transition:width .3s;flex-shrink:0}
+#infoPanel.open{width:260px}
+.ip-content{width:260px;height:100%;overflow-y:auto;padding:1rem}
+.ip-content::-webkit-scrollbar{width:3px}
+.ip-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.ip-section{margin-bottom:1.25rem}
+.ip-title{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--text-muted);margin-bottom:.6rem;padding-bottom:.3rem;border-bottom:1px solid var(--border)}
+.ip-link{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;background:var(--bg-deep);border-radius:.4rem;margin-bottom:.35rem;text-decoration:none;color:var(--text-main);font-size:.78rem;border:1px solid transparent;transition:all .2s;cursor:pointer}
+.ip-link:hover{border-color:rgba(59,130,246,.3);color:var(--primary)}
+.ip-link-icon{font-size:.9rem}
+
+/* ── EMPTY STATE ── */
+#emptyState{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:var(--text-muted);padding:2rem;text-align:center}
+.empty-icon{font-size:3rem;opacity:.4}
+.empty-title{font-size:1rem;font-weight:700;color:var(--text-muted)}
+.empty-sub{font-size:.82rem;max-width:280px;line-height:1.6}
+
+/* ── MODERATION BANNER ── */
+.mod-banner{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:.5rem;padding:.65rem .85rem;font-size:.78rem;color:#fcd34d;display:flex;align-items:flex-start;gap:.5rem;margin:0 1rem .5rem}
+.mod-banner.hidden{display:none}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg-card);border:1px solid rgba(59,130,246,.4);border-radius:.5rem;padding:.75rem 1.1rem;font-size:.82rem;color:var(--text-main);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── NOTIFICATION dot ── */
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--danger);flex-shrink:0;animation:notifPulse 1.5s infinite}
+@keyframes notifPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 6px rgba(239,68,68,0)}}
+
+/* ── ADMIN SUGGESTIONS inbox ── */
+.suggestion-inbox{background:var(--bg-deep);border:1px solid rgba(245,158,11,.25);border-radius:.5rem;padding:.65rem .85rem;margin-bottom:.5rem}
+.suggestion-inbox-title{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--warning);margin-bottom:.4rem}
+.suggestion-item{font-size:.75rem;color:#cbd5e1;padding:.3rem 0;border-bottom:1px solid var(--border);display:flex;gap:.4rem;align-items:flex-start}
+.suggestion-item:last-child{border-bottom:none}
+.si-read{color:var(--text-muted);font-size:.65rem;margin-top:.1rem;flex-shrink:0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  nav ul{display:none}
+  #roomsPanel{position:absolute;left:0;top:0;bottom:0;z-index:400;transform:translateX(-260px)}
+  #roomsPanel.mobile-open{transform:translateX(0)}
+  .ct-back{display:flex}
+  #infoPanel.open{position:absolute;right:0;top:0;bottom:0;z-index:400}
+}
+@media(max-width:480px){
+  .auth-card{padding:1.5rem}
+}
+*:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#chatMain">Saltar al chat</a>
+
+<!-- ══════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════ -->
+<header role="banner">
+  <a href="index.html" class="logo" aria-label="KP@CES inicio">KP<span class="at">@</span>CS</a>
+  <nav aria-label="Navegación principal">
+    <ul>
+      <li><a href="talento-kpaces.html">Talento</a></li>
+      <li><a href="lugares-kpaces.html">Lugares</a></li>
+      <li><a href="recursos-kpaces.html">Recursos</a></li>
+      <li><a href="#" class="active" aria-current="page">Chat</a></li>
+    </ul>
+  </nav>
+  <div class="h-right" id="headerRight">
+    <button class="btn-sm btn-outline" onclick="showAuth('login')">Entrar</button>
+    <button class="btn-sm btn-primary" onclick="showAuth('register')">Unirme</button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════
+     AUTH SCREEN
+══════════════════════════════════════════ -->
+<div id="authScreen" role="dialog" aria-modal="true" aria-label="Inicio de sesión o registro">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">KP<span class="at">@</span>CS</div>
+      <p class="auth-tagline">Comunidad accesible · Chat inclusivo</p>
+
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" role="tab" aria-selected="true" onclick="switchTab('login',this)">Entrar</button>
+        <button class="auth-tab" role="tab" aria-selected="false" onclick="switchTab('register',this)">Registrarme</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="tabLogin">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Correo electrónico</label>
+          <input class="form-input" id="loginEmail" type="email" placeholder="tu@email.com" autocomplete="email" aria-describedby="loginEmailErr">
+          <span class="form-error" id="loginEmailErr"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPw">Contraseña</label>
+          <div class="pw-wrap">
+            <input class="form-input" id="loginPw" type="password" placeholder="••••••••" autocomplete="current-password">
+            <button class="pw-toggle" onclick="togglePw('loginPw',this)" aria-label="Mostrar contraseña">👁</button>
+          </div>
+          <span class="form-error" id="loginPwErr"></span>
+        </div>
+        <div style="text-align:right;margin-bottom:.85rem">
+          <a href="#" style="font-size:.72rem;color:var(--primary);text-decoration:none">¿Olvidaste tu contraseña?</a>
+        </div>
+        <button class="btn-full primary" onclick="doLogin()">Entrar en el chat →</button>
+        <div class="divider">o entra con</div>
+        <div class="social-btns">
+          <button class="btn-social google" onclick="socialLogin('Google')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Continuar con Google
+          </button>
+          <button class="btn-social github" onclick="socialLogin('GitHub')">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98.01 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.7 5.4-5.27 5.68.42.36.79 1.07.79 2.16v3.2c0 .31.21.67.8.56C20.71 21.4 24 17.09 24 12 24 5.65 18.85.5 12 .5z"/></svg>
+            Continuar con GitHub
+          </button>
+        </div>
+        <p class="auth-switch">¿No tienes cuenta? <a onclick="switchTab('register',document.querySelectorAll('.auth-tab')[1])">Regístrate gratis</a></p>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="tabRegister" style="display:none">
+        <div class="form-group">
+          <label class="form-label" for="regName">Nombre o apodo</label>
+          <input class="form-input" id="regName" type="text" placeholder="Como quieres que te llamen" autocomplete="nickname">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Elige tu avatar</label>
+          <div class="avatar-row" id="avatarRow">
+            <span class="av-opt selected" data-av="🙂">🙂</span>
+            <span class="av-opt" data-av="😎">😎</span>
+            <span class="av-opt" data-av="🌟">🌟</span>
+            <span class="av-opt" data-av="♿">♿</span>
+            <span class="av-opt" data-av="🦻">🦻</span>
+            <span class="av-opt" data-av="👁">👁</span>
+            <span class="av-opt" data-av="🧠">🧠</span>
+            <span class="av-opt" data-av="💙">💙</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Correo electrónico</label>
+          <input class="form-input" id="regEmail" type="email" placeholder="tu@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regPw">Contraseña</label>
+          <div class="pw-wrap">
+            <input class="form-input" id="regPw" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+            <button class="pw-toggle" onclick="togglePw('regPw',this)" aria-label="Mostrar contraseña">👁</button>
+          </div>
+          <span class="form-error" id="regPwErr"></span>
+        </div>
+        <div style="margin-bottom:.9rem">
+          <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:.75rem;color:var(--text-muted);cursor:pointer">
+            <input type="checkbox" id="regTerms" style="margin-top:2px;accent-color:var(--primary)">
+            Acepto el <a href="#" style="color:var(--primary);margin:0 .2rem">código de conducta</a> y que la IA modere el chat para mantener un espacio respetuoso.
+          </label>
+        </div>
+        <button class="btn-full primary" onclick="doRegister()">Crear cuenta y chatear →</button>
+        <div class="divider">o regístrate con</div>
+        <div class="social-btns">
+          <button class="btn-social google" onclick="socialLogin('Google')">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Registrarme con Google
+          </button>
+        </div>
+        <p class="auth-switch">¿Ya tienes cuenta? <a onclick="switchTab('login',document.querySelectorAll('.auth-tab')[0])">Entra aquí</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CHAT APP
+══════════════════════════════════════════ -->
+<div id="chatApp" role="main" aria-label="Aplicación de chat">
+
+  <!-- ROOMS PANEL -->
+  <aside id="roomsPanel" aria-label="Canales y conversaciones">
+    <div class="rp-header">
+      <div class="rp-user">
+        <div class="user-av" id="myAvatar" aria-hidden="true">🙂
+          <span class="status-dot dot-online" aria-label="En línea"></span>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="myName">Usuario</div>
+          <div class="user-status" id="myStatusLabel">En línea</div>
+        </div>
+        <button class="settings-btn" onclick="cycleStatus()" title="Cambiar estado" aria-label="Cambiar estado de presencia">⚙</button>
+      </div>
+      <div class="rp-search">
+        <input type="text" placeholder="Buscar canales…" id="roomSearch" oninput="filterRooms(this.value)" aria-label="Buscar canales">
+      </div>
+    </div>
+
+    <div class="rooms-list" role="navigation" aria-label="Lista de canales">
+      <div class="rp-section">Canales <button onclick="showToast('💬 Crear canal (próximamente)')" aria-label="Crear nuevo canal">＋</button></div>
+      <div id="roomsList"></div>
+      <div class="rp-section" style="margin-top:.5rem">Usuarios online</div>
+      <div id="onlineList"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN CHAT -->
+  <section id="chatMain" aria-label="Área de chat">
+    <!-- Empty state -->
+    <div id="emptyState">
+      <div class="empty-icon">💬</div>
+      <div class="empty-title">Bienvenido al Chat Kp@cs</div>
+      <div class="empty-sub">Selecciona un canal o inicia una conversación privada con alguien de la comunidad.</div>
+    </div>
+
+    <!-- Chat window (hidden until room selected) -->
+    <div id="chatWindow" style="display:none;flex:1;flex-direction:column;overflow:hidden">
+      <!-- Topbar -->
+      <div class="chat-topbar">
+        <button class="ct-back" onclick="closeChatMobile()" aria-label="Volver a la lista">‹</button>
+        <div class="ct-av" id="ctAvatar" aria-hidden="true"></div>
+        <div class="ct-info">
+          <div class="ct-name" id="ctName"></div>
+          <div class="ct-sub" id="ctSub"></div>
+        </div>
+        <div class="ct-actions">
+          <button class="icon-btn" onclick="toggleInfo()" title="Información y recursos" aria-label="Ver información y recursos">ℹ</button>
+          <button class="icon-btn" onclick="showToast('📹 Videollamada (próximamente)')" title="Videollamada" aria-label="Iniciar videollamada">📹</button>
+          <button class="icon-btn" onclick="showToast('🔇 Silenciar notificaciones')" title="Silenciar" aria-label="Silenciar canal">🔔</button>
+        </div>
+      </div>
+
+      <!-- Mod banner -->
+      <div class="mod-banner hidden" id="modBanner" role="alert">
+        <span>⚠</span>
+        <span id="modBannerText"></span>
+      </div>
+
+      <!-- Messages -->
+      <div id="messagesWrap" role="log" aria-live="polite" aria-label="Mensajes del chat"></div>
+
+      <!-- AI Suggestions -->
+      <div class="suggestion-row" id="suggestionsRow" aria-label="Sugerencias de la IA"></div>
+
+      <!-- Input -->
+      <div class="chat-input-area">
+        <div class="input-row">
+          <button class="attach-btn" onclick="showToast('📎 Adjuntar archivo (próximamente)')" aria-label="Adjuntar archivo">📎</button>
+          <textarea class="msg-input" id="msgInput" placeholder="Escribe un mensaje…" rows="1" aria-label="Escribir mensaje" onkeydown="handleKey(event)" oninput="autoResize(this);onTyping()"></textarea>
+          <button class="emoji-btn" onclick="insertEmoji()" aria-label="Insertar emoji">😊</button>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Enviar mensaje">➤</button>
+        </div>
+        <div class="input-hints">
+          <span>Enter para enviar · Shift+Enter nueva línea</span>
+          <span>🛡 Moderado por IA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFO PANEL -->
+  <div id="infoPanel" aria-label="Recursos del canal">
+    <div class="ip-content">
+      <div class="ip-section">
+        <div class="ip-title">🔗 Recursos Kp@cs</div>
+        <a class="ip-link" href="talento-kpaces.html"><span class="ip-link-icon">💼</span>Talento Kp@ces</a>
+        <a class="ip-link" href="lugares-kpaces.html"><span class="ip-link-icon">🗺</span>Lugares accesibles</a>
+        <a class="ip-link" href="recursos-kpaces.html"><span class="ip-link-icon">📚</span>Recursos oficiales</a>
+      </div>
+      <div class="ip-section">
+        <div class="ip-title">⚖ Ayuda rápida</div>
+        <div class="ip-link" onclick="askAI('¿Cómo tramito el certificado de discapacidad?')"><span class="ip-link-icon">🏛</span>Certificado discapacidad</div>
+        <div class="ip-link" onclick="askAI('¿Qué ayudas de empleo existen para personas con discapacidad?')"><span class="ip-link-icon">💼</span>Ayudas de empleo</div>
+        <div class="ip-link" onclick="askAI('¿Cómo puedo encontrar lugares accesibles cerca de mí?')"><span class="ip-link-icon">♿</span>Lugares accesibles</div>
+        <div class="ip-link" onclick="askAI('¿Qué prestaciones económicas puedo solicitar al IMSERSO?')"><span class="ip-link-icon">💰</span>Prestaciones IMSERSO</div>
+      </div>
+      <div class="ip-section" id="adminSuggestionsSection" style="display:none">
+        <div class="ip-title">📬 Sugerencias pendientes (Admin)</div>
+        <div id="adminSuggestions"></div>
+      </div>
+      <div class="ip-section">
+        <div class="ip-title">🛡 Código de conducta</div>
+        <p style="font-size:.72rem;color:var(--text-muted);line-height:1.6">Este espacio es <strong style="color:var(--text-main)">seguro e inclusivo</strong>. La IA modera el chat para prevenir faltas de respeto, discriminación o contenido inapropiado. Ante cualquier incidencia, el mensaje será retenido y revisado.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script>
+// ════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════
+let currentUser = null;
+let currentRoom = null;
+let typingTimer = null;
+let selectedAvatar = '🙂';
+let infoPanelOpen = false;
+let statusCycle = ['online','away','offline'];
+let statusIdx = 0;
+let adminSuggestions = [];
+
+// ════════════════════════════════════════════════════
+//  ROOMS DATA
+// ════════════════════════════════════════════════════
+const ROOMS = [
+  { id:'general', name:'General', icon:'💬', type:'channel', desc:'Chat general de la comunidad', unread:0 },
+  { id:'movilidad', name:'Movilidad Reducida', icon:'♿', type:'channel', desc:'Dudas, recursos y experiencias sobre movilidad', unread:2 },
+  { id:'visual', name:'Discapacidad Visual', icon:'👁', type:'channel', desc:'Canal para personas con discapacidad visual', unread:0 },
+  { id:'auditiva', name:'Discapacidad Auditiva', icon:'🦻', type:'channel', desc:'LSE, recursos auditivos y comunidad sorda', unread:1 },
+  { id:'cognitiva', name:'Discapacidad Cognitiva', icon:'🧠', type:'channel', desc:'Apoyo para discapacidad intelectual y cognitiva', unread:0 },
+  { id:'empleo', name:'Empleo e Inclusión', icon:'💼', type:'channel', desc:'Ofertas, derechos laborales y orientación', unread:3 },
+  { id:'ayudas', name:'Ayudas y Recursos', icon:'📚', type:'channel', desc:'Prestaciones, trámites y novedades legales', unread:0 },
+  { id:'sugerencias', name:'Sugerencias Web', icon:'💡', type:'channel', desc:'Propón mejoras para Kp@ces (llega al admin)', unread:0 },
+];
+
+const ONLINE_USERS = [
+  { id:'u1', name:'Carmen R.', avatar:'♿', status:'online', role:'usuario' },
+  { id:'u2', name:'Antonio L.', avatar:'🦻', status:'online', role:'usuario' },
+  { id:'u3', name:'Isabel F.', avatar:'👁', status:'away', role:'usuario' },
+  { id:'u4', name:'Pedro M.', avatar:'😎', status:'online', role:'usuario' },
+  { id:'u5', name:'Ana García', avatar:'💙', status:'online', role:'admin' },
+  { id:'ai', name:'Asistente IA Kp@ces', avatar:'🤖', status:'online', role:'ai' },
+];
+
+// ════════════════════════════════════════════════════
+//  MESSAGES DB (per room)
+// ════════════════════════════════════════════════════
+const MESSAGES = {
+  general: [
+    { id:1, user:'Carmen R.', avatar:'♿', text:'¡Hola a todos! ¿Alguien sabe si el Hospital La Paz tiene lista de espera larga para valoración de discapacidad?', time:'10:22', own:false },
+    { id:2, user:'Pedro M.', avatar:'😎', text:'Hola Carmen. Yo fui en enero y tardé unos 3 meses. Te recomiendo pedir cita cuanto antes por la sede electrónica de la Comunidad de Madrid.', time:'10:25', own:false },
+    { id:3, user:'ai', avatar:'🤖', text:'Hola Carmen 👋 Puedo orientarte sobre el proceso. El reconocimiento del grado de discapacidad se tramita ante los Equipos de Valoración (EVO) de tu comunidad autónoma. En Madrid puedes iniciar el trámite en línea sin esperas.', time:'10:26', own:false, isAI:true, links:[{label:'Ver recurso oficial',url:'recursos-kpaces.html'}] },
+  ],
+  movilidad: [
+    { id:1, user:'Antonio L.', avatar:'🦻', text:'Aquí comparto que el Plan Adapta del Ayuntamiento de Madrid está abierto hasta el 30 de mayo. ¡Que nadie se quede sin pedir la subvención para rampa!', time:'09:15', own:false },
+    { id:2, user:'ai', avatar:'🤖', text:'Muy buena información Antonio 👍 El Plan Adapta financia hasta el 50% de las obras de eliminación de barreras arquitectónicas en viviendas (máx. 6.000€). Tienes toda la info en nuestra sección de Recursos.', time:'09:17', own:false, isAI:true, links:[{label:'Ver Plan Adapta',url:'recursos-kpaces.html'}] },
+  ],
+  empleo: [
+    { id:1, user:'ai', avatar:'🤖', text:'¡Bienvenidos al canal de Empleo e Inclusión! 💼 Aquí podéis consultar dudas sobre derechos laborales, bonificaciones para empresas, Centros Especiales de Empleo y ofertas de trabajo. Estoy aquí para ayudarte a encontrar lo que necesitas.', time:'08:00', own:false, isAI:true },
+    { id:2, user:'Isabel F.', avatar:'👁', text:'¿Alguien sabe si una empresa con 25 trabajadores está obligada a contratar personas con discapacidad?', time:'11:05', own:false },
+    { id:3, user:'ai', avatar:'🤖', text:'Buena pregunta Isabel. La cuota de reserva del 2% es obligatoria solo para empresas con 50 o más trabajadores. Con 25, no es obligatorio pero sí hay bonificaciones importantes en Seguridad Social si contratan. ¿Quieres que te detalle las bonificaciones?', time:'11:06', own:false, isAI:true },
+  ],
+  sugerencias: [
+    { id:1, user:'ai', avatar:'🤖', text:'👋 Este es el canal de Sugerencias para Kp@ces. Todo lo que escribas aquí llegará al equipo administrador para mejorar la web. ¡Tu opinión es fundamental!', time:'08:00', own:false, isAI:true },
+  ],
+  ayudas:[],visual:[],auditiva:[],cognitiva:[]
+};
+
+// ════════════════════════════════════════════════════
+//  AI MODERATION + RESPONSE ENGINE
+// ════════════════════════════════════════════════════
+const BAD_WORDS = ['idiota','estúpido','inútil','imbécil','subnormal','retrasado','tonto','mierda','gilipollas','puto','joder','hostia'];
+const HATE_PATTERNS = [/\b(odi[ao]|odias)\b/i, /\bno serv[íi]s\b/i, /\binváli[d]o\b/i];
+
+function moderateMessage(text) {
+  const lower = text.toLowerCase();
+  for (const w of BAD_WORDS) {
+    if (lower.includes(w)) return { blocked: true, reason: `El mensaje contiene lenguaje inapropiado ("${w}"). Por favor, mantén un tono respetuoso.` };
+  }
+  for (const p of HATE_PATTERNS) {
+    if (p.test(lower)) return { blocked: true, reason: 'El mensaje puede interpretarse como ofensivo o discriminatorio. Kp@ces es un espacio seguro para todos.' };
+  }
+  return { blocked: false };
+}
+
+// Keyword → AI response map
+const AI_KB = [
+  { kw: ['certificado','grado','discapacidad','reconocimiento','valoración'], response: '📋 Para obtener el **certificado de discapacidad** en Madrid debes solicitarlo en los Equipos de Valoración y Orientación (EVO). Necesitas informe médico actualizado, DNI y solicitud. El plazo de resolución es de ~3 meses.', links: [{label:'Ver trámite oficial',url:'recursos-kpaces.html'}] },
+  { kw: ['empleo','trabajo','contratar','empresa','cee','centro especial'], response: '💼 Para **empleo con discapacidad** el SEPE ofrece bonificaciones a empresas de hasta 4.500€/año. Puedes buscar en Centros Especiales de Empleo (CEE) o acceder a orientación gratuita en el servicio de empleo de tu CA.', links: [{label:'Recursos empleo',url:'recursos-kpaces.html'},{label:'Mapa lugares',url:'lugares-kpaces.html'}] },
+  { kw: ['imserso','pensión','prestación','pnc','subsidio','ayuda económica'], response: '💰 El IMSERSO gestiona las **Prestaciones No Contributivas** de invalidez para personas con discapacidad ≥65% sin ingresos suficientes. La cuantía actual es de ~517€/mes. También hay prestaciones por hijo a cargo.', links: [{label:'Ver IMSERSO',url:'recursos-kpaces.html'}] },
+  { kw: ['rampa','ascensor','accesibilidad','barreras','plan adapta','edificio'], response: '🏗 Existen varias ayudas para **eliminar barreras arquitectónicas**: el Plan Adapta del Ayuntamiento de Madrid (hasta 6.000€), subvenciones de la Comunidad de Madrid y el Plan de Rehabilitación del Gobierno estatal (hasta 8.000€).', links: [{label:'Ver recursos accesibilidad',url:'recursos-kpaces.html'},{label:'Mapa accesible',url:'lugares-kpaces.html'}] },
+  { kw: ['taxi','transporte','movilidad','vehículo','adaptado','aparcamiento'], response: '🚗 La Comunidad de Madrid tiene **ayudas de movilidad** para personas con discapacidad ≥33%: subvención taxi, adaptación de vehículo y tarjeta de aparcamiento PMR (válida en toda la UE).', links: [{label:'Ver ayuda movilidad',url:'recursos-kpaces.html'}] },
+  { kw: ['teatro','museo','cultura','entrada','descuento','gratis','gratuidad'], response: '🎭 Muchos **centros culturales de Madrid** ofrecen entrada gratuita o 50% descuento para personas con discapacidad ≥33% y su acompañante. Consulta nuestro mapa de lugares accesibles.', links: [{label:'Lugares accesibles',url:'lugares-kpaces.html'}] },
+  { kw: ['lse','lengua de signos','sordo','auditiva','intérprete'], response: '🤟 Para **discapacidad auditiva**: la Ley 27/2007 reconoce el derecho a usar la Lengua de Signos Española. Puedes solicitar intérpretes en administraciones públicas. Hay bucles magnéticos en muchos edificios públicos de Madrid.', links: [{label:'Ver recursos auditivos',url:'recursos-kpaces.html'}] },
+  { kw: ['braille','visual','ceguera','baja visión','once'], response: '👁 Para **discapacidad visual**: la ONCE ofrece servicios de rehabilitación, tecnología asistiva y formación. Los edificios públicos deben tener señalética en braille según el RD 193/2023.', links: [{label:'Ver recursos visuales',url:'recursos-kpaces.html'}] },
+  { kw: ['autismo','tea','cognitiva','intelectual','pictograma'], response: '🧠 Para **discapacidad cognitiva y autismo**: los pictogramas, lenguaje fácil y entornos sensorialmente amigables son derechos reconocidos. Muchos teatros de Madrid ya ofrecen "funciones relajadas".', links: [{label:'Ver recursos',url:'recursos-kpaces.html'}] },
+  { kw: ['irpf','impuestos','deducciones','renta','hacienda','tributación'], response: '💸 Las personas con discapacidad tienen importantes **beneficios fiscales en el IRPF**: mínimo personal incrementado (hasta 12.000€ adicionales), reducción por movilidad reducida y exención de algunas prestaciones.', links: [{label:'Ver deducciones IRPF',url:'recursos-kpaces.html'}] },
+  { kw: ['sugerencia','mejora','propuesta','idea','cambiar','añadir','falta'], response: '💡 ¡Gracias por tu sugerencia! La he registrado y será revisada por el equipo de Kp@ces. Te avisaré cuando esté siendo considerada. Tu aportación ayuda a mejorar la web para toda la comunidad. 🙏', isSuggestion: true },
+  { kw: ['hola','buenas','hey','qué tal','saludos'], response: '¡Hola! 👋 Soy el asistente IA de Kp@ces. Puedo ayudarte con dudas sobre accesibilidad, ayudas del Estado, empleo con discapacidad o simplemente orientarte por la web. ¿En qué te puedo ayudar hoy?' },
+  { kw: ['gracias','perfecto','genial','excelente','muy bien'], response: '¡De nada! 😊 Estoy aquí siempre que lo necesites. Si tienes más preguntas sobre accesibilidad, ayudas o simplemente quieres compartir algo con la comunidad, adelante.' },
+];
+
+function getAIResponse(text) {
+  const lower = text.toLowerCase();
+  for (const entry of AI_KB) {
+    if (entry.kw.some(k => lower.includes(k))) {
+      return entry;
+    }
+  }
+  // Fallback
+  return {
+    response: 'Entiendo tu mensaje. En Kp@ces trabajamos para que puedas encontrar toda la información sobre accesibilidad, ayudas y recursos. ¿Puedes darme más detalles sobre lo que necesitas? También puedes explorar nuestras secciones de **Recursos**, **Lugares accesibles** y **Talento**.',
+    links: [{label:'Ver recursos',url:'recursos-kpaces.html'},{label:'Mapa accesible',url:'lugares-kpaces.html'}]
+  };
+}
+
+// ════════════════════════════════════════════════════
+//  AI SUGGESTIONS PER ROOM
+// ════════════════════════════════════════════════════
+const ROOM_SUGGESTIONS = {
+  general: ['¿Cómo tramito mi certificado?','Busco lugares accesibles','¿Qué ayudas existen?','Tengo una sugerencia para la web'],
+  movilidad: ['Necesito instalar una rampa','¿Qué es el Plan Adapta?','Tarjeta de aparcamiento PMR','Adaptación de vehículo'],
+  visual: ['Recursos para baja visión','¿Qué es la ONCE?','Señalética braille en Madrid','Audiodescripción en teatros'],
+  auditiva: ['¿Dónde hay bucle magnético?','Intérprete LSE en el médico','Implante coclear y recursos','Derechos lengua de signos'],
+  cognitiva: ['Funciones relajadas en teatros','Pictogramas en Madrid','Educación especial e inclusiva','Apoyo para autismo TEA'],
+  empleo: ['Bonificaciones para empresas','CEE cerca de mí','¿Puedo cobrar y trabajar?','Orientación laboral gratuita'],
+  ayudas: ['Prestaciones IMSERSO','IRPF y discapacidad','Plan de Rehabilitación','Dependencia SAAD'],
+  sugerencias: ['Quiero proponer una mejora','Falta información sobre…','El mapa podría mejorar si…','Me gustaría ver…'],
+};
+
+// ════════════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════════════
+function showAuth(tab) {
+  switchTab(tab, document.querySelectorAll('.auth-tab')[tab==='register'?1:0]);
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.auth-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+  el.classList.add('active');
+  el.setAttribute('aria-selected','true');
+  document.getElementById('tabLogin').style.display = tab==='login' ? '' : 'none';
+  document.getElementById('tabRegister').style.display = tab==='register' ? '' : 'none';
+}
+
+function togglePw(id, btn) {
+  const inp = document.getElementById(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+// Avatar selection
+document.getElementById('avatarRow').querySelectorAll('.av-opt').forEach(av => {
+  av.addEventListener('click', () => {
+    document.querySelectorAll('.av-opt').forEach(a => a.classList.remove('selected'));
+    av.classList.add('selected');
+    selectedAvatar = av.dataset.av;
+  });
+});
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pw = document.getElementById('loginPw').value;
+  if (!email || !pw) { showToast('⚠ Rellena todos los campos'); return; }
+  if (!/\S+@\S+\.\S+/.test(email)) { showError('loginEmailErr','Email no válido'); return; }
+  loginUser(email.split('@')[0], '🙂');
+}
+
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pw = document.getElementById('regPw').value;
+  const terms = document.getElementById('regTerms').checked;
+  if (!name || !email || !pw) { showToast('⚠ Rellena todos los campos'); return; }
+  if (pw.length < 8) { showError('regPwErr','La contraseña debe tener al menos 8 caracteres'); return; }
+  if (!terms) { showToast('⚠ Debes aceptar el código de conducta'); return; }
+  loginUser(name, selectedAvatar);
+}
+
+function socialLogin(provider) {
+  const names = { Google:'Usuario Google', GitHub:'Dev GitHub' };
+  const avs = { Google:'🌟', GitHub:'😎' };
+  loginUser(names[provider] || provider, avs[provider] || '🙂');
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),3000); }
+}
+
+function loginUser(name, avatar) {
+  currentUser = { name, avatar, status:'online' };
+  document.getElementById('myName').textContent = name;
+  document.getElementById('myAvatar').textContent = avatar;
+  document.getElementById('headerRight').innerHTML = `
+    <span style="font-size:.85rem;color:var(--text-muted)">${avatar} ${name}</span>
+    <button class="btn-sm btn-outline" onclick="logout()">Salir</button>`;
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('chatApp').classList.add('ready');
+  renderRooms();
+  renderOnlineUsers();
+  openRoom('general');
+  showToast(`✅ ¡Bienvenido/a, ${name}!`);
+  // Check if admin (simple demo: name === 'admin')
+  if (name.toLowerCase().includes('admin')) {
+    document.getElementById('adminSuggestionsSection').style.display = 'block';
+    renderAdminSuggestions();
+  }
+}
+
+function logout() {
+  currentUser = null;
+  currentRoom = null;
+  document.getElementById('authScreen').classList.remove('hidden');
+  document.getElementById('chatApp').classList.remove('ready');
+  document.getElementById('chatWindow').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'flex';
+  document.getElementById('headerRight').innerHTML = `
+    <button class="btn-sm btn-outline" onclick="showAuth('login')">Entrar</button>
+    <button class="btn-sm btn-primary" onclick="showAuth('register')">Unirme</button>`;
+}
+
+// ════════════════════════════════════════════════════
+//  ROOMS
+// ════════════════════════════════════════════════════
+function renderRooms(filter='') {
+  const list = document.getElementById('roomsList');
+  const filtered = ROOMS.filter(r => r.name.toLowerCase().includes(filter.toLowerCase()));
+  list.innerHTML = filtered.map(r => `
+    <div class="room-item ${currentRoom===r.id?'active':''}" onclick="openRoom('${r.id}')" role="button" tabindex="0" onkeypress="if(event.key==='Enter')openRoom('${r.id}')" aria-label="${r.name}${r.unread?' - '+r.unread+' mensajes sin leer':''}">
+      <span class="room-icon">${r.icon}</span>
+      <div class="room-meta">
+        <div class="room-name">${r.name}</div>
+        <div class="room-preview">${r.desc}</div>
+      </div>
+      ${r.unread ? `<span class="room-badge" aria-label="${r.unread} sin leer">${r.unread}</span>` : ''}
+    </div>`).join('');
+}
+
+function filterRooms(val) { renderRooms(val); }
+
+function renderOnlineUsers() {
+  const list = document.getElementById('onlineList');
+  list.innerHTML = ONLINE_USERS.map(u => {
+    const dotClass = u.status==='online'?'dot-online':u.status==='away'?'dot-away':'dot-offline';
+    const bg = u.role==='ai'?'linear-gradient(135deg,#2563eb,#06b6d4)':u.role==='admin'?'linear-gradient(135deg,#7c3aed,#6d28d9)':'linear-gradient(135deg,#1d293b,#2d3f55)';
+    return `<div class="online-item" onclick="openDM('${u.id}')" role="button" tabindex="0" onkeypress="if(event.key==='Enter')openDM('${u.id}')" aria-label="${u.name} - ${u.status}">
+      <div class="oi-av" style="background:${bg}">
+        ${u.avatar}
+        <span class="status-dot ${dotClass}" style="position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;border:2px solid var(--bg-deep)"></span>
+      </div>
+      <div>
+        <div class="oi-name">${u.name}${u.role==='admin'?'<span style="font-size:.58rem;background:rgba(124,58,237,.2);color:#c4b5fd;padding:.05rem .35rem;border-radius:3px;margin-left:.3rem">ADM</span>':u.role==='ai'?'<span style="font-size:.58rem;background:rgba(59,130,246,.15);color:#93c5fd;padding:.05rem .35rem;border-radius:3px;margin-left:.3rem">IA</span>':''}</div>
+        <div class="oi-status">${u.status==='online'?'● En línea':u.status==='away'?'● Ausente':'○ Desconectado'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openRoom(id) {
+  currentRoom = id;
+  const room = ROOMS.find(r=>r.id===id);
+  room.unread = 0;
+  renderRooms();
+  // Update topbar
+  document.getElementById('ctAvatar').textContent = room.icon;
+  document.getElementById('ctAvatar').style.background = 'var(--primary-glow)';
+  document.getElementById('ctName').textContent = '#'+room.name;
+  document.getElementById('ctSub').textContent = room.desc;
+  document.getElementById('modBanner').classList.add('hidden');
+  document.getElementById('emptyState').style.display = 'none';
+  const cw = document.getElementById('chatWindow');
+  cw.style.display = 'flex';
+  // Suggestions
+  renderSuggestions(id);
+  renderMessages(id);
+  // Auto-AI welcome if empty
+  if (!MESSAGES[id] || MESSAGES[id].length === 0) {
+    MESSAGES[id] = [];
+    setTimeout(() => addAIMessage(id, `¡Bienvenido/a al canal **${room.name}**! 👋 Soy el asistente IA de Kp@ces. Estoy aquí para orientarte y ayudarte. Si ningún miembro de la comunidad responde, yo estaré disponible siempre. ¿En qué puedo ayudarte hoy?`, []), 600);
+  }
+}
+
+function openDM(userId) {
+  const user = ONLINE_USERS.find(u=>u.id===userId);
+  if (!user) return;
+  const dmId = 'dm_'+userId;
+  if (!MESSAGES[dmId]) {
+    MESSAGES[dmId] = [];
+    if (userId === 'ai') {
+      MESSAGES[dmId].push({ id:1, user:'Asistente IA Kp@ces', avatar:'🤖', text:'¡Hola! 👋 Soy el asistente IA de Kp@ces. Puedo ayudarte con información sobre accesibilidad, ayudas, recursos y orientarte por la web. ¿Qué necesitas hoy?', time:getTime(), own:false, isAI:true });
+    }
+  }
+  currentRoom = dmId;
+  const bg = userId==='ai'?'linear-gradient(135deg,#2563eb,#06b6d4)':userId==='u5'?'linear-gradient(135deg,#7c3aed,#6d28d9)':'linear-gradient(135deg,var(--primary-dark),#38bdf8)';
+  document.getElementById('ctAvatar').textContent = user.avatar;
+  document.getElementById('ctAvatar').style.background = bg;
+  document.getElementById('ctName').textContent = user.name;
+  document.getElementById('ctSub').textContent = userId==='ai'?'Asistente IA · Siempre disponible':user.status==='online'?'En línea':'Ausente';
+  document.getElementById('modBanner').classList.add('hidden');
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('chatWindow').style.display = 'flex';
+  renderSuggestions('general');
+  renderMessages(dmId);
+}
+
+function renderMessages(roomId) {
+  const wrap = document.getElementById('messagesWrap');
+  const msgs = MESSAGES[roomId] || [];
+  if (msgs.length === 0) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `<div class="msg-day">Hoy · ${new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</div>`;
+  msgs.forEach(m => wrap.appendChild(buildMessageEl(m)));
+  scrollToBottom();
+}
+
+function buildMessageEl(msg) {
+  const div = document.createElement('div');
+  const isOwn = msg.own;
+  div.className = `msg-row${isOwn?' own':''}`;
+  const avBg = msg.isAI ? 'linear-gradient(135deg,#2563eb,#06b6d4)' : isOwn ? 'linear-gradient(135deg,var(--primary-dark),#38bdf8)' : 'linear-gradient(135deg,#1d293b,#2d3f55)';
+  const bubbleClass = isOwn ? 'bubble-own' : msg.isAI ? 'bubble-ai' : msg.isSystem ? 'bubble-system' : msg.isWarn ? 'bubble-warn' : 'bubble-other';
+  let content = `<div class="bubble ${bubbleClass}">`;
+  if (msg.isAI) content += `<div class="ai-badge">✦ Asistente IA Kp@ces</div>`;
+  content += formatText(msg.text);
+  if (msg.links && msg.links.length) {
+    content += `<div style="margin-top:.5rem;display:flex;flex-wrap:wrap;gap:.3rem">`;
+    msg.links.forEach(l => {
+      content += `<a href="${l.url}" style="display:inline-flex;align-items:center;gap:.25rem;font-size:.72rem;background:rgba(255,255,255,.1);padding:.2rem .55rem;border-radius:.3rem;color:inherit;text-decoration:none;border:1px solid rgba(255,255,255,.15);transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.1)'">🔗 ${l.label}</a>`;
+    });
+    content += `</div>`;
+  }
+  content += `</div>`;
+  if (!msg.isSystem && !msg.isWarn) {
+    content += `<div class="msg-meta">${msg.time}${isOwn?'<span class="msg-status">✓✓</span>':''}</div>`;
+  }
+  if (msg.isSystem || msg.isWarn) {
+    div.innerHTML = `<div style="width:100%;text-align:center">${content}</div>`;
+  } else {
+    div.innerHTML = `
+      <div class="msg-av" style="background:${avBg}" aria-hidden="true">${msg.avatar}</div>
+      <div class="msg-block">
+        ${!isOwn?`<div class="msg-sender">${msg.user}</div>`:''}
+        ${content}
+      </div>`;
+  }
+  return div;
+}
+
+function formatText(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+function renderSuggestions(roomId) {
+  const row = document.getElementById('suggestionsRow');
+  const sugs = ROOM_SUGGESTIONS[roomId] || ROOM_SUGGESTIONS['general'];
+  row.innerHTML = sugs.map(s => `<button class="sug-chip" onclick="useSuggestion('${s.replace(/'/g,"\\'")}')">${s}</button>`).join('');
+}
+
+function useSuggestion(text) {
+  document.getElementById('msgInput').value = text;
+  document.getElementById('msgInput').focus();
+  autoResize(document.getElementById('msgInput'));
+}
+
+// ════════════════════════════════════════════════════
+//  SEND MESSAGE
+// ════════════════════════════════════════════════════
+function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text || !currentRoom || !currentUser) return;
+  // Moderation
+  const mod = moderateMessage(text);
+  if (mod.blocked) {
+    showModerationWarning(mod.reason);
+    return;
+  }
+  // Add user message
+  const msg = { id: Date.now(), user: currentUser.name, avatar: currentUser.avatar, text, time: getTime(), own: true };
+  if (!MESSAGES[currentRoom]) MESSAGES[currentRoom] = [];
+  MESSAGES[currentRoom].push(msg);
+  appendMessage(msg);
+  input.value = '';
+  autoResize(input);
+  // Handle suggestion channel
+  if (currentRoom === 'sugerencias') {
+    handleSuggestion(text);
+    return;
+  }
+  // AI response with delay
+  setTimeout(() => showTyping(), 800);
+  setTimeout(() => {
+    hideTyping();
+    const aiData = getAIResponse(text);
+    if (aiData.isSuggestion) {
+      handleSuggestion(text);
+    } else {
+      const aiMsg = checkIfNeedsResponse(text) ? aiData : null;
+      if (aiMsg) addAIMessage(currentRoom, aiMsg.response, aiMsg.links || []);
+    }
+  }, 2000 + Math.random() * 1000);
+}
+
+function checkIfNeedsResponse(text) {
+  // Always respond in DMs with AI, or if message is a question/keyword match
+  if (currentRoom.startsWith('dm_')) return true;
+  const lower = text.toLowerCase();
+  const triggers = ['?','ayuda','cómo','qué','dónde','cuándo','cuánto','necesito','busco','quiero saber','tramit','recurso','ayud','subvenci'];
+  return triggers.some(t => lower.includes(t)) || text.length < 50;
+}
+
+function addAIMessage(roomId, text, links) {
+  const msg = { id: Date.now(), user:'Asistente IA Kp@ces', avatar:'🤖', text, time: getTime(), own:false, isAI:true, links: links||[] };
+  if (!MESSAGES[roomId]) MESSAGES[roomId] = [];
+  MESSAGES[roomId].push(msg);
+  if (currentRoom === roomId) appendMessage(msg);
+}
+
+function appendMessage(msg) {
+  const wrap = document.getElementById('messagesWrap');
+  // Remove empty state text if needed
+  const empty = wrap.querySelector('.empty-msg');
+  if (empty) empty.remove();
+  wrap.appendChild(buildMessageEl(msg));
+  scrollToBottom();
+}
+
+function showModerationWarning(reason) {
+  const banner = document.getElementById('modBanner');
+  document.getElementById('modBannerText').textContent = `🛡 Mensaje bloqueado: ${reason}`;
+  banner.classList.remove('hidden');
+  setTimeout(() => banner.classList.add('hidden'), 6000);
+  // Also add system message
+  const warnMsg = { id: Date.now(), user:'Sistema', avatar:'🛡', text:`⚠ Mensaje moderado: ${reason}`, time: getTime(), own:false, isWarn:true };
+  appendMessage(warnMsg);
+}
+
+function handleSuggestion(text) {
+  const suggestion = { id: Date.now(), user: currentUser.name, text, time: getTime(), read: false };
+  adminSuggestions.push(suggestion);
+  renderAdminSuggestions();
+  // AI acknowledgment
+  setTimeout(() => {
+    hideTyping();
+    addAIMessage(currentRoom,
+      `✅ Tu sugerencia ha sido registrada y enviada al equipo administrador de Kp@ces. Recibirás una respuesta cuando sea revisada.\n\n📬 **Estado:** En espera de lectura por el administrador.`,
+      []);
+  }, 1500);
+  showTyping();
+}
+
+function renderAdminSuggestions() {
+  const container = document.getElementById('adminSuggestions');
+  if (!container) return;
+  if (adminSuggestions.length === 0) {
+    container.innerHTML = '<p style="font-size:.72rem;color:var(--text-muted)">Sin sugerencias pendientes.</p>';
+    return;
+  }
+  container.innerHTML = adminSuggestions.map(s => `
+    <div class="suggestion-item">
+      <div style="flex:1">
+        <strong style="font-size:.72rem">${s.user}:</strong>
+        <span style="color:var(--text-muted)"> ${s.text.substring(0,80)}${s.text.length>80?'…':''}</span>
+      </div>
+      <div class="si-read">${s.read?'✓ Leído':'⏳ Pendiente'}</div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════
+//  TYPING INDICATOR
+// ════════════════════════════════════════════════════
+let typingEl = null;
+
+function showTyping() {
+  if (typingEl) return;
+  typingEl = document.createElement('div');
+  typingEl.className = 'msg-row typing-row';
+  typingEl.id = 'typingIndicator';
+  typingEl.innerHTML = `
+    <div class="msg-av" style="background:linear-gradient(135deg,#2563eb,#06b6d4)" aria-hidden="true">🤖</div>
+    <div class="typing-bubble" aria-label="El asistente está escribiendo">
+      <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+    </div>`;
+  document.getElementById('messagesWrap').appendChild(typingEl);
+  scrollToBottom();
+}
+
+function hideTyping() {
+  if (typingEl) { typingEl.remove(); typingEl = null; }
+}
+
+function onTyping() {
+  clearTimeout(typingTimer);
+}
+
+// ════════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════════
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function scrollToBottom() {
+  const wrap = document.getElementById('messagesWrap');
+  setTimeout(() => wrap.scrollTop = wrap.scrollHeight, 50);
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+}
+
+function askAI(question) {
+  if (!currentRoom) openRoom('general');
+  document.getElementById('msgInput').value = question;
+  sendMessage();
+}
+
+function insertEmoji() {
+  const emojis = ['😊','👍','♿','🤟','👁','🦻','🧠','💙','🙏','❤','🌟','💪'];
+  const e = emojis[Math.floor(Math.random()*emojis.length)];
+  const inp = document.getElementById('msgInput');
+  inp.value += e;
+  inp.focus();
+}
+
+function toggleInfo() {
+  infoPanelOpen = !infoPanelOpen;
+  document.getElementById('infoPanel').classList.toggle('open', infoPanelOpen);
+}
+
+function toggleSidebar() {
+  document.getElementById('roomsPanel').classList.toggle('mobile-open');
+}
+
+function closeChatMobile() {
+  document.getElementById('roomsPanel').classList.add('mobile-open');
+}
+
+function cycleStatus() {
+  statusIdx = (statusIdx + 1) % statusCycle.length;
+  const s = statusCycle[statusIdx];
+  const dot = document.querySelector('#myAvatar .status-dot');
+  if (dot) { dot.className = `status-dot dot-${s}`; }
+  document.getElementById('myStatusLabel').textContent = s==='online'?'En línea':s==='away'?'Ausente':'Desconectado';
+  currentUser.status = s;
+  showToast(`Estado: ${s==='online'?'🟢 En línea':s==='away'?'🟡 Ausente':'⚫ Desconectado'}`);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════
+// Simulate offline users sending messages occasionally
+function simulateActivity() {
+  const msgs = [
+    { room:'movilidad', user:'Antonio L.', avatar:'🦻', text:'¿Alguien más ha tenido problemas con la app de cita previa del IMSERSO? No me carga bien.' },
+    { room:'empleo', user:'Pedro M.', avatar:'😎', text:'Acabo de conseguir trabajo en un CEE en Madrid. ¡Muy recomendable para empezar!' },
+    { room:'general', user:'Ana García', avatar:'💙', text:'Recordad que el próximo miércoles hay webinar gratuito sobre derechos de las personas con discapacidad en el trabajo. ¡Os comparto el enlace!' },
+    { room:'auditiva', user:'Carmen R.', avatar:'♿', text:'¿Sabéis si el nuevo médico del Centro de Salud de Vallecas tiene intérprete LSE disponible?' },
+  ];
+  let i = 0;
+  function addNext() {
+    if (!currentUser) { setTimeout(addNext, 8000); return; }
+    const m = msgs[i % msgs.length];
+    i++;
+    const msg = { id:Date.now(), user:m.user, avatar:m.avatar, text:m.text, time:getTime(), own:false };
+    if (!MESSAGES[m.room]) MESSAGES[m.room] = [];
+    MESSAGES[m.room].push(msg);
+    if (currentRoom === m.room) appendMessage(msg);
+    // Update unread badge
+    if (currentRoom !== m.room) {
+      const r = ROOMS.find(r=>r.id===m.room);
+      if (r) { r.unread++; renderRooms(); }
+    }
+    // AI responds if keyword match
+    setTimeout(() => {
+      const aiData = getAIResponse(m.text);
+      if (m.text.includes('?')) {
+        addAIMessage(m.room, aiData.response, aiData.links||[]);
+      }
+    }, 3500);
+    setTimeout(addNext, 15000 + Math.random() * 25000);
+  }
+  setTimeout(addNext, 12000);
+}
+
+simulateActivity();
+</script>
+</body>
+</html>

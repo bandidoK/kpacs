@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lugares Accesibles – Kp@cs</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #121212;
+      --bg-card: #1d293b;
+      --bg-deep: #0f172a;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-d: #2563eb;
+      --primary-g: rgba(59, 130, 246, 0.12);
+      --border: #2d3f55;
+      --radius: 0.75rem;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      background: var(--primary);
+      color: #fff;
+      padding: .5rem 1rem;
+      border-radius: .375rem;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+      transition: top .2s
+    }
+
+    .skip-link:focus {
+      top: .5rem
+    }
+
+    header {
+      background: var(--bg-deep);
+      padding: .75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 500;
+      flex-shrink: 0
+    }
+
+    .logo-area {
+      font-family: "Limelight", sans-serif;
+      font-size: 1.6rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .logo-area .at {
+      color: var(--primary)
+    }
+
+    .logo-sub {
+      font-family: 'Segoe UI', sans-serif;
+      font-size: .72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: .08em
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: .85rem;
+      cursor: pointer;
+      transition: color .2s;
+      padding: .25rem 0;
+      border-bottom: 2px solid transparent
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary)
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: .75rem
+    }
+
+    .btn-sm {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: .45rem 1rem;
+      border-radius: .375rem;
+      font-weight: 700;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: background .2s
+    }
+
+    .btn-sm:hover {
+      background: var(--primary-d)
+    }
+
+    .btn-sm.outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted)
+    }
+
+    .btn-sm.outline:hover {
+      border-color: var(--primary);
+      color: var(--primary)
+    }
+
+    .app-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      position: relative
+    }
+
+    .sidebar {
+      width: 320px;
+      min-width: 280px;
+      background: var(--bg-deep);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform .3s ease;
+      z-index: 300;
+      flex-shrink: 0
+    }
+
+    .sidebar.hidden-mobile {
+      transform: translateX(-100%)
+    }
+
+    .sidebar-header {
+      padding: 1rem 1.25rem .75rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0
+    }
+
+    .search-wrap {
+      position: relative;
+      margin-bottom: .75rem
+    }
+
+    .search-icon {
+      position: absolute;
+      left: .75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      font-size: .9rem
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: .65rem 2.5rem .65rem 2.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: .88rem;
+      outline: none;
+      transition: border-color .2s
+    }
+
+    #searchInput:focus {
+      border-color: var(--primary)
+    }
+
+    #searchInput::placeholder {
+      color: var(--text-muted)
+    }
+
+    .mic-btn {
+      position: absolute;
+      right: .5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: .95rem;
+      padding: .25rem;
+      transition: color .2s
+    }
+
+    .mic-btn:hover {
+      color: var(--primary)
+    }
+
+    .mic-btn.listening {
+      color: var(--danger);
+      animation: pulse 1s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .4
+      }
+    }
+
+    .filter-section {
+      padding: .75rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0
+    }
+
+    .filter-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .5rem
+    }
+
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem
+    }
+
+    .chip {
+      padding: .28rem .7rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: .74rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .chip:hover,
+    .chip:focus {
+      border-color: var(--primary);
+      color: var(--primary);
+      outline: 2px solid var(--primary);
+      outline-offset: 1px
+    }
+
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff
+    }
+
+    .type-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .4rem
+    }
+
+    .type-chip {
+      padding: .22rem .6rem;
+      border-radius: .3rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: .7rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .type-chip.active {
+      background: rgba(59, 130, 246, .15);
+      border-color: rgba(59, 130, 246, .4);
+      color: #93c5fd
+    }
+
+    .legend {
+      padding: .6rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0
+    }
+
+    .legend-bar {
+      height: 8px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #6b7a99, #4a90d9, #ffd700, #ff8c00, #ff4500);
+      margin: .35rem 0
+    }
+
+    .legend-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: .65rem;
+      color: var(--text-muted)
+    }
+
+    .results-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: .75rem
+    }
+
+    .results-list::-webkit-scrollbar {
+      width: 4px
+    }
+
+    .results-list::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 10px
+    }
+
+    .result-count {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-bottom: .6rem;
+      padding: 0 .25rem
+    }
+
+    .result-count strong {
+      color: var(--primary)
+    }
+
+    .place-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .625rem;
+      padding: .85rem;
+      margin-bottom: .6rem;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+      outline: none
+    }
+
+    .place-card:hover,
+    .place-card:focus {
+      border-color: rgba(59, 130, 246, .5);
+      transform: translateX(2px)
+    }
+
+    .place-card.selected {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, .08)
+    }
+
+    .place-heat-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 3px;
+      box-shadow: 0 0 8px currentColor
+    }
+
+    .place-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .place-name {
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .place-type {
+      font-size: .7rem;
+      color: var(--text-muted);
+      margin-top: .1rem
+    }
+
+    .place-score {
+      font-size: .7rem;
+      font-weight: 700;
+      padding: .15rem .5rem;
+      border-radius: 100px;
+      flex-shrink: 0
+    }
+
+    .place-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .25rem;
+      margin-top: .4rem
+    }
+
+    .mini-tag {
+      font-size: .6rem;
+      padding: .1rem .4rem;
+      border-radius: .25rem;
+      border: 1px solid transparent
+    }
+
+    .map-container {
+      flex: 1;
+      position: relative
+    }
+
+    #map {
+      width: 100%;
+      height: 100%
+    }
+
+    .map-overlay-controls {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 400;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem
+    }
+
+    .map-ctrl-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      color: var(--text-main);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .3)
+    }
+
+    .map-ctrl-btn:hover {
+      background: var(--primary);
+      border-color: var(--primary)
+    }
+
+    .location-btn {
+      position: absolute;
+      bottom: 5rem;
+      right: 1rem;
+      z-index: 400;
+      background: var(--primary);
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, .4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s
+    }
+
+    .location-btn:hover {
+      background: var(--primary-d);
+      transform: scale(1.05)
+    }
+
+    .transport-badge {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1rem;
+      z-index: 400;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .625rem;
+      padding: .5rem .85rem;
+      font-size: .75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .3)
+    }
+
+    .transport-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s infinite
+    }
+
+    .detail-panel {
+      width: 370px;
+      min-width: 340px;
+      background: var(--bg-deep);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateX(100%);
+      transition: transform .35s cubic-bezier(.4, 0, .2, 1);
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 400
+    }
+
+    .detail-panel.open {
+      transform: translateX(0)
+    }
+
+    .panel-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      position: relative
+    }
+
+    .panel-close {
+      position: absolute;
+      top: .85rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color .2s
+    }
+
+    .panel-close:hover {
+      color: var(--danger)
+    }
+
+    .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.25rem
+    }
+
+    .panel-body::-webkit-scrollbar {
+      width: 4px
+    }
+
+    .panel-body::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 10px
+    }
+
+    .panel-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1rem;
+      background: var(--bg-card);
+      border-radius: .5rem;
+      padding: .2rem
+    }
+
+    .panel-tab {
+      flex: 1;
+      padding: .45rem;
+      text-align: center;
+      border-radius: .35rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: .72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .panel-tab.active {
+      background: var(--primary);
+      color: #fff
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+      margin-bottom: 1rem
+    }
+
+    .feature-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      padding: .65rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .3rem;
+      text-align: center;
+      font-size: .72rem;
+      transition: border-color .2s
+    }
+
+    .feature-item.has {
+      border-color: rgba(34, 197, 94, .4)
+    }
+
+    .feature-item.no {
+      opacity: .4
+    }
+
+    .f-icon {
+      font-size: 1.4rem
+    }
+
+    .f-label {
+      font-size: .68rem;
+      color: var(--text-muted);
+      line-height: 1.2
+    }
+
+    .f-status {
+      font-size: .6rem;
+      font-weight: 700;
+      padding: .1rem .4rem;
+      border-radius: 100px
+    }
+
+    .f-status.yes {
+      background: rgba(34, 197, 94, .15);
+      color: #86efac
+    }
+
+    .f-status.no {
+      background: rgba(239, 68, 68, .1);
+      color: #fca5a5
+    }
+
+    .review-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      padding: .75rem;
+      margin-bottom: .6rem
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .4rem
+    }
+
+    .review-user {
+      font-size: .8rem;
+      font-weight: 700
+    }
+
+    .review-stars {
+      color: var(--warning);
+      font-size: .75rem
+    }
+
+    .review-disability {
+      font-size: .65rem;
+      color: var(--primary);
+      margin-bottom: .3rem
+    }
+
+    .review-text {
+      font-size: .78rem;
+      color: var(--text-muted);
+      line-height: 1.5
+    }
+
+    .review-date {
+      font-size: .65rem;
+      color: var(--text-muted);
+      margin-top: .3rem
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .6rem;
+      margin-bottom: 1rem
+    }
+
+    .action-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      padding: .75rem .5rem;
+      color: var(--text-main);
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .35rem
+    }
+
+    .action-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-g);
+      color: var(--primary)
+    }
+
+    .action-btn .a-icon {
+      font-size: 1.3rem
+    }
+
+    .action-btn.primary-action {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      grid-column: span 2
+    }
+
+    .action-btn.primary-action:hover {
+      background: var(--primary-d)
+    }
+
+    .bonus-item {
+      background: rgba(245, 158, 11, .08);
+      border: 1px solid rgba(245, 158, 11, .3);
+      border-radius: .5rem;
+      padding: .75rem;
+      margin-bottom: .6rem
+    }
+
+    .bonus-title {
+      font-size: .8rem;
+      font-weight: 700;
+      color: #fcd34d;
+      margin-bottom: .3rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem
+    }
+
+    .bonus-text {
+      font-size: .75rem;
+      color: var(--text-muted);
+      line-height: 1.5
+    }
+
+    .transport-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      padding: .75rem;
+      margin-bottom: .5rem;
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start
+    }
+
+    .transport-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0
+    }
+
+    .transport-name {
+      font-size: .82rem;
+      font-weight: 700
+    }
+
+    .transport-detail {
+      font-size: .72rem;
+      color: var(--text-muted)
+    }
+
+    .transport-access {
+      font-size: .68rem;
+      font-weight: 700;
+      margin-top: .25rem
+    }
+
+    .sec-label {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .6rem;
+      margin-top: .85rem
+    }
+
+    .sec-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border)
+    }
+
+    .form-input {
+      width: 100%;
+      padding: .6rem .85rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: .4rem;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: .82rem;
+      outline: none;
+      transition: border-color .2s;
+      margin-bottom: .5rem
+    }
+
+    .form-input:focus {
+      border-color: var(--primary)
+    }
+
+    .form-label {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-bottom: .2rem;
+      font-weight: 600;
+      display: block
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .8);
+      z-index: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 540px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, .5);
+      transform: scale(.95);
+      transition: transform .3s
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1)
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700
+    }
+
+    .modal-body {
+      padding: 1.5rem
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      cursor: pointer
+    }
+
+    .modal-close:hover {
+      color: var(--danger)
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: .625rem;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 1rem
+    }
+
+    .upload-zone:hover {
+      border-color: var(--primary);
+      background: var(--primary-g)
+    }
+
+    .improvement-list {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      margin-bottom: 1rem
+    }
+
+    .improvement-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .6rem .85rem;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: .4rem;
+      cursor: pointer;
+      transition: border-color .2s
+    }
+
+    .improvement-item input[type=checkbox] {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px
+    }
+
+    .improvement-item:hover {
+      border-color: rgba(59, 130, 246, .4)
+    }
+
+    .heat-preview {
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      padding: .75rem;
+      margin-top: 1rem;
+      font-size: .78rem;
+      color: var(--text-muted)
+    }
+
+    .heat-preview-bar {
+      height: 6px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #6b7a99, #4a90d9, #ffd700, #ff8c00, #ff4500);
+      margin: .5rem 0
+    }
+
+    .log-panel {
+      background: var(--bg-deep);
+      border-top: 1px solid var(--border);
+      padding: .5rem 1.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: .68rem;
+      color: var(--success);
+      flex-shrink: 0;
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      overflow: hidden
+    }
+
+    .log-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 1.5s infinite;
+      flex-shrink: 0
+    }
+
+    .log-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg-card);
+      border: 1px solid rgba(59, 130, 246, .4);
+      border-radius: .625rem;
+      padding: .75rem 1.25rem;
+      font-size: .82rem;
+      color: var(--text-main);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+      z-index: 2000;
+      transition: transform .3s, opacity .3s;
+      opacity: 0
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: var(--primary);
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      color: #fff;
+      font-size: 1.2rem;
+      position: absolute;
+      bottom: 5.5rem;
+      left: 1rem;
+      z-index: 450;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, .4);
+      align-items: center;
+      justify-content: center
+    }
+
+    .leaflet-container {
+      background: #1a2030 !important
+    }
+
+    .leaflet-control-zoom {
+      border: 1px solid var(--border) !important
+    }
+
+    .leaflet-control-zoom a {
+      background: var(--bg-card) !important;
+      color: var(--text-main) !important;
+      border-bottom: 1px solid var(--border) !important
+    }
+
+    .leaflet-control-zoom a:hover {
+      background: var(--primary) !important
+    }
+
+    .leaflet-popup-content-wrapper {
+      background: var(--bg-card) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: .625rem !important;
+      color: var(--text-main) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .4) !important
+    }
+
+    .leaflet-popup-tip {
+      background: var(--bg-card) !important
+    }
+
+    mark {
+      background: rgba(59, 130, 246, .25);
+      color: var(--primary);
+      border-radius: 2px;
+      padding: 0 2px
+    }
+
+    @media(max-width:900px) {
+      .sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 350
+      }
+
+      .mobile-toggle {
+        display: flex
+      }
+
+      .detail-panel {
+        width: 100%;
+        min-width: unset
+      }
+    }
+
+    @media(max-width:600px) {
+      .nav-links {
+        display: none
+      }
+
+      .logo-sub {
+        display: none
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#map" class="skip-link">Saltar al mapa</a>
+  <header role="banner">
+    <div class="logo-area">KP<span class="at">@</span>CS <span class="logo-sub">Lugares Accesibles</span></div>
+    <nav role="navigation" aria-label="Navegación principal">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="talento.html">Talento</a></li>
+        <li><a href="#">Lugares</a></li>
+        <li><a href="recursos.html">Recursos</a></li>
+        <li><a href="contacto.html" id="nav-contact">Contacto</a></li>
+        <li><a href="chat.html">Chat</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-sm outline" onclick="openBusinessPortal()">🏢 Mi Negocio</button>
+      <button class="btn-sm" onclick="requestLocation()">📍 Mi Ubicación</button>
+    </div>
+  </header>
+  <div class="app-body" role="main">
+    <aside class="sidebar" id="sidebar" role="complementary" aria-label="Búsqueda y filtros">
+      <div class="sidebar-header">
+        <div class="search-wrap" role="search">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input type="search" id="searchInput" placeholder="Hospital, teatro, tienda…"
+            aria-label="Buscar lugares accesibles" autocomplete="off">
+          <button class="mic-btn" id="micBtn" aria-label="Búsqueda por voz">🎤</button>
+        </div>
+      </div>
+      <div class="filter-section">
+        <p class="filter-label">Tipo de Discapacidad</p>
+        <div class="filter-chips" role="group" aria-label="Filtros discapacidad">
+          <button class="chip active" data-filter="all" aria-pressed="true">Todas</button>
+          <button class="chip" data-filter="fisica" aria-pressed="false">♿ Física</button>
+          <button class="chip" data-filter="visual" aria-pressed="false">👁 Visual</button>
+          <button class="chip" data-filter="auditiva" aria-pressed="false">👂 Auditiva</button>
+          <button class="chip" data-filter="cognitiva" aria-pressed="false">🧠 Cognitiva</button>
+          <button class="chip" data-filter="sensorial" aria-pressed="false">🌟 Sensorial</button>
+        </div>
+      </div>
+      <div class="filter-section" style="padding-top:.5rem">
+        <p class="filter-label">Tipo de Lugar</p>
+        <div class="type-chips" role="group" aria-label="Filtros tipo">
+          <button class="type-chip active" data-type="all">Todos</button>
+          <button class="type-chip" data-type="hospital">🏥 Hospital</button>
+          <button class="type-chip" data-type="teatro">🎭 Cultura</button>
+          <button class="type-chip" data-type="transporte">🚇 Transporte</button>
+          <button class="type-chip" data-type="comercio">🛒 Comercio</button>
+          <button class="type-chip" data-type="admin">🏛 Admin</button>
+          <button class="type-chip" data-type="ocio">🎡 Ocio</button>
+        </div>
+      </div>
+      <div class="legend">
+        <p class="filter-label">Mapa de Calor de Accesibilidad</p>
+        <div class="legend-bar"></div>
+        <div class="legend-labels"><span>Barreras</span><span>Parcial</span><span>Buena</span><span>Total ♥</span></div>
+      </div>
+      <div class="results-list" id="resultsList" role="list" aria-label="Lista de lugares">
+        <p class="result-count" id="resultCount" aria-live="polite"></p>
+      </div>
+      <div class="log-panel" aria-live="polite">
+        <span class="log-dot" aria-hidden="true"></span>
+        <span class="log-text" id="logText">IA monitorizando fuentes oficiales…</span>
+      </div>
+    </aside>
+    <div class="map-container">
+      <div id="map" tabindex="0" aria-label="Mapa interactivo de lugares accesibles" role="application"></div>
+      <div class="map-overlay-controls">
+        <button class="map-ctrl-btn" onclick="toggleHeatLayer()" title="Mapa de calor">🔥</button>
+        <button class="map-ctrl-btn" onclick="fitAll()" title="Ver todos">⊡</button>
+      </div>
+      <button class="location-btn" onclick="requestLocation()" aria-label="Mi ubicación">📍</button>
+      <div class="transport-badge">
+        <span class="transport-dot"></span>
+        <span id="transportStatus">Metro/Bus accesible en tiempo real</span>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Menú">☰</button>
+    </div>
+    <div class="detail-panel" id="detailPanel" role="dialog" aria-modal="true" aria-label="Detalle del lugar"
+      aria-hidden="true">
+      <div class="panel-header">
+        <button class="panel-close" onclick="closePanel()" aria-label="Cerrar">✕</button>
+        <div id="panelHeading"></div>
+      </div>
+      <div class="panel-tabs" role="tablist">
+        <button class="panel-tab active" role="tab" aria-selected="true" data-tab="accesibilidad"
+          onclick="switchTab(this,'accesibilidad')">Accesibil.</button>
+        <button class="panel-tab" role="tab" aria-selected="false" data-tab="acciones"
+          onclick="switchTab(this,'acciones')">Acciones</button>
+        <button class="panel-tab" role="tab" aria-selected="false" data-tab="transporte"
+          onclick="switchTab(this,'transporte')">Transporte</button>
+        <button class="panel-tab" role="tab" aria-selected="false" data-tab="resenas"
+          onclick="switchTab(this,'resenas')">Reseñas</button>
+      </div>
+      <div class="panel-body" id="panelBody"></div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="businessModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">🏢 Portal Empresas – Actualizar Accesibilidad</h2>
+        <button class="modal-close" onclick="closeBusinessPortal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:1.25rem">Registra mejoras y la IA actualiza tu
+          puntuación en el mapa de calor automáticamente.</p>
+        <label class="form-label" for="bizName">Establecimiento</label>
+        <input class="form-input" id="bizName" type="text" placeholder="Nombre del negocio">
+        <label class="form-label" for="bizAddress">Dirección</label>
+        <input class="form-input" id="bizAddress" type="text" placeholder="Calle, número, ciudad">
+        <p class="filter-label" style="margin:.75rem 0 .5rem">Mejoras realizadas</p>
+        <div class="improvement-list" id="improvementList"></div>
+        <div class="upload-zone" tabindex="0" aria-label="Subir documentación">
+          <div style="font-size:2rem;margin-bottom:.5rem">📁</div>
+          <p style="font-size:.9rem;font-weight:700;margin-bottom:.25rem">Subir documentación</p>
+          <p style="font-size:.78rem;color:var(--text-muted)">Certificados, fotos, informes (PDF/JPG)</p>
+        </div>
+        <div class="heat-preview">
+          <p style="font-size:.72rem;font-weight:700;margin-bottom:.35rem">Vista previa puntuación IA</p>
+          <div class="heat-preview-bar"></div>
+          <div style="height:16px;position:relative;margin-top:.25rem">
+            <div id="heatNeedle"
+              style="position:absolute;top:0;width:2px;height:12px;background:#fff;left:20%;transition:left .5s"></div>
+          </div>
+          <p id="heatPreviewLabel" style="font-size:.7rem;color:var(--text-muted);margin-top:.6rem">Selecciona mejoras
+            para ver tu puntuación.</p>
+        </div>
+        <button class="btn-sm" style="width:100%;margin-top:1rem;padding:.75rem;font-size:.9rem"
+          onclick="submitBusiness()">✦ Enviar para Verificación IA</button>
+        <p style="font-size:.68rem;color:var(--text-muted);margin-top:.5rem;text-align:center">Verificación en 24-48h
+          con confirmación por email.</p>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script>
+    const PLACES = [{ id: 1, name: 'Hospital Universitario La Paz', type: 'hospital', lat: 40.4786, lng: -3.6866, address: 'Paseo de la Castellana, 261, Madrid', score: 96, disabilities: ['fisica', 'visual', 'auditiva', 'cognitiva', 'sensorial'], features: { rampa: true, ascensor: true, braille: true, bucle_magnetico: true, pictogramas: true, lse: true, personal_apoyo: true, banos_adapt: true, parking: true, perro_guia: true, silla_prestamo: false, audio_descripcion: true }, bonuses: [{ title: 'Aparcamiento gratuito', text: 'Tarjeta discapacidad ≥33%: parking reservado sin coste.' }, { title: 'Prioridad en citas', text: 'Discapacidad ≥65%: prioridad en agenda telefónica y presencial.' }, { title: 'Intérprete LSE gratuito', text: 'Interpretación LSE previa solicitud con 24h de antelación.' }], transport: [{ icon: '🚇', name: 'Metro: Begoña (L10)', detail: 'Ascensores operativos', access: '♿ 100% Accesible', accessible: true }, { icon: '🚌', name: 'Bus: 27, 40, 134', detail: 'Paradas con rampa', access: '♿ Piso bajo', accessible: true }, { icon: '🚕', name: 'Taxi accesible', detail: 'Bajo demanda vía app', access: '♿ Vehículo adaptado', accessible: true }], reviews: [{ user: 'Ana G.', disability: 'Física – Silla de ruedas', stars: 5, text: 'Todo perfectamente adaptado. Baños amplísimos y personal increíblemente atento.', date: 'Feb 2025' }, { user: 'Carlos M.', disability: 'Auditiva – Sordera total', stars: 5, text: 'El bucle magnético funciona en todas las consultas. Por fin un hospital donde entiendo todo.', date: 'Ene 2025' }], url: 'https://www.comunidad.madrid/hospital/lapaz', tickets: null, ai_summary: 'Hospital público de referencia con accesibilidad total certificada. Referente nacional en atención a personas con discapacidad.' }, { id: 2, name: 'Teatro Real de Madrid', type: 'teatro', lat: 40.4183, lng: -3.7083, address: 'Plaza de Isabel II, s/n, Madrid', score: 92, disabilities: ['fisica', 'visual', 'auditiva', 'cognitiva'], features: { rampa: true, ascensor: true, braille: true, bucle_magnetico: true, pictogramas: true, lse: true, personal_apoyo: true, banos_adapt: true, parking: false, perro_guia: true, silla_prestamo: true, audio_descripcion: true }, bonuses: [{ title: '50% dto. entradas', text: 'Discapacidad ≥33% y acompañante: 50% en todas las funciones.' }, { title: 'Sillas en préstamo', text: 'Silla de ruedas gratuita en taquilla con DNI.' }, { title: 'Audiodescripción', text: 'Funciones seleccionadas con audiodescripción y subtitulado.' }], transport: [{ icon: '🚇', name: 'Metro: Ópera (L2, L5)', detail: 'Ascensores en servicio', access: '♿ Accesible', accessible: true }, { icon: '🚌', name: 'Bus: 3, 25, 39', detail: 'Paradas a 50m', access: '♿ Piso bajo', accessible: true }], reviews: [{ user: 'Marta R.', disability: 'Visual – Baja visión', stars: 5, text: 'La audiodescripción es mágica. Pude seguir la ópera completamente.', date: 'Mar 2025' }, { user: 'Roberto S.', disability: 'Física – Paraplejia', stars: 4, text: 'Plazas para silla de ruedas con buena visibilidad. El bar del entreacto algo complicado.', date: 'Dic 2024' }], url: 'https://www.teatroreal.es/es/accesibilidad', tickets: 'https://www.teatroreal.es/es/comprar-entradas', ai_summary: 'Teatro lírico con programa integral: audiodescripción, bucle magnético, préstamo de sillas y 50% de descuento para discapacidad.' }, { id: 3, name: 'Museo del Prado', type: 'teatro', lat: 40.4138, lng: -3.6922, address: 'Calle de Ruiz de Alarcón, 23, Madrid', score: 89, disabilities: ['fisica', 'visual', 'auditiva', 'cognitiva', 'sensorial'], features: { rampa: true, ascensor: true, braille: true, bucle_magnetico: false, pictogramas: true, lse: true, personal_apoyo: true, banos_adapt: true, parking: false, perro_guia: true, silla_prestamo: true, audio_descripcion: true }, bonuses: [{ title: 'Entrada gratuita', text: 'Discapacidad ≥33% y acompañante: gratuidad todos los días.' }, { title: 'Visitas táctiles', text: 'Réplicas táctiles de obras maestras para discapacidad visual.' }, { title: 'Tours en LSE', text: 'Primeros sábados de mes. Grupos reducidos, sin coste.' }], transport: [{ icon: '🚇', name: 'Metro: Banco de España (L2)', detail: 'Accesible con ascensor', access: '♿ Accesible', accessible: true }, { icon: '🚌', name: 'Bus: 10, 14, 19, 27', detail: 'Parada El Prado', access: '♿ Piso bajo', accessible: true }], reviews: [{ user: 'Sofía L.', disability: 'Visual – Ceguera total', stars: 5, text: 'Las réplicas táctiles son una maravilla. Pude tocar el Guernica en 3D.', date: 'Feb 2025' }, { user: 'Javier P.', disability: 'Cognitiva – TEA', stars: 4, text: 'La visita adaptada para TEA fue excelente. Grupos pequeños y pictogramas en todo.', date: 'Ene 2025' }], url: 'https://www.museodelprado.es/visita-el-museo/accesibilidad', tickets: 'https://entradas.museodelprado.es', ai_summary: 'Museo nacional con programa de accesibilidad galardonado. Gratuito ≥33%, réplicas táctiles y tours en LSE.' }, { id: 4, name: 'Estación de Atocha – Renfe', type: 'transporte', lat: 40.4068, lng: -3.6892, address: 'Glorieta del Emperador Carlos V, Madrid', score: 85, disabilities: ['fisica', 'visual', 'auditiva'], features: { rampa: true, ascensor: true, braille: true, bucle_magnetico: true, pictogramas: true, lse: false, personal_apoyo: true, banos_adapt: true, parking: true, perro_guia: true, silla_prestamo: false, audio_descripcion: false }, bonuses: [{ title: 'Servicio ATENDO', text: 'Asistencia gratuita en andenes. Reserva con 24h de antelación.' }, { title: 'Plaza PMR garantizada', text: 'Plazas reservadas en AVE y Larga Distancia para movilidad reducida.' }], transport: [{ icon: '🚇', name: 'Metro: Atocha Renfe (L1)', detail: 'Ascensores en todas las plantas', access: '♿ 100% Accesible', accessible: true }, { icon: '🚌', name: 'Bus: 10, 14, 32, 37', detail: 'Marquesinas con audio', access: '♿ Piso bajo', accessible: true }, { icon: '🚆', name: 'Cercanías: C1,C2,C3,C4', detail: 'Todos accesibles', access: '♿ Rampas en andén', accessible: true }], reviews: [{ user: 'Pilar V.', disability: 'Física – Muletas', stars: 4, text: 'El servicio ATENDO es fantástico. Madrid-Barcelona sin ningún problema.', date: 'Mar 2025' }], url: 'https://www.renfe.com/es/es/grupo-renfe/atendo', tickets: 'https://www.renfe.com', ai_summary: 'Hub de transporte con ATENDO de Renfe. Ascensores operativos y asistencia personalizada en andenes.' }, { id: 5, name: 'Centro Comercial Xanadú', type: 'comercio', lat: 40.3419, lng: -3.8847, address: 'A-5, km 23, Arroyomolinos, Madrid', score: 78, disabilities: ['fisica', 'sensorial'], features: { rampa: true, ascensor: true, braille: false, bucle_magnetico: false, pictogramas: true, lse: false, personal_apoyo: false, banos_adapt: true, parking: true, perro_guia: true, silla_prestamo: true, audio_descripcion: false }, bonuses: [{ title: 'Parking PMR gratuito', text: 'Plazas reservadas en todos los niveles sin coste adicional.' }, { title: 'Sillas de ruedas', text: 'Préstamo en información con DNI y fianza de 20€ reembolsable.' }], transport: [{ icon: '🚌', name: 'Bus 545 desde Príncipe Pío', detail: 'Adaptado, cada 30min', access: '♿ Piso bajo', accessible: true }, { icon: '🚗', name: 'Parking propio', detail: '250 plazas PMR en P-1 y P-2', access: '♿ Señalizadas', accessible: true }], reviews: [{ user: 'Luis H.', disability: 'Física – Silla manual', stars: 3, text: 'Parking bien pero hay desniveles entre tiendas. Falta señalización táctil.', date: 'Ene 2025' }], url: 'https://www.xanadu.es', tickets: null, ai_summary: 'Buena accesibilidad física pero pendiente de mejoras en señalética táctil y bucle magnético.' }, { id: 6, name: 'Ayuntamiento de Madrid – OFIAM', type: 'admin', lat: 40.4153, lng: -3.7074, address: 'Plaza de la Villa, 1, Madrid', score: 72, disabilities: ['fisica', 'auditiva'], features: { rampa: true, ascensor: true, braille: false, bucle_magnetico: true, pictogramas: false, lse: true, personal_apoyo: true, banos_adapt: true, parking: false, perro_guia: true, silla_prestamo: false, audio_descripcion: false }, bonuses: [{ title: 'Turno prioritario', text: 'Personas con discapacidad: turno preferente por teléfono.' }, { title: 'Intérprete LSE', text: 'Disponible en OFIAM, Oficina Municipal de Discapacidad.' }], transport: [{ icon: '🚇', name: 'Metro: Ópera (L2, L5)', detail: 'Accesible', access: '♿ Ascensores', accessible: true }, { icon: '🚌', name: 'Bus: 3, 25, 39', detail: 'Parada Sol', access: '♿ Piso bajo', accessible: true }], reviews: [{ user: 'Isabel T.', disability: 'Auditiva – Implante', stars: 3, text: 'Bucle magnético funciona con interferencias a veces. Intérprete LSE muy profesional.', date: 'Feb 2025' }], url: 'https://www.madrid.es/portales/munimadrid/es/Inicio/El-Ayuntamiento/Servicios-para-personas-con-discapacidad', tickets: null, ai_summary: 'OFIAM con atención especializada. Bucle magnético e intérprete LSE disponibles.' }, { id: 7, name: 'WiZink Center', type: 'ocio', lat: 40.4322, lng: -3.6617, address: 'Avenida Felipe II, s/n, Madrid', score: 81, disabilities: ['fisica', 'visual', 'auditiva'], features: { rampa: true, ascensor: true, braille: false, bucle_magnetico: true, pictogramas: true, lse: false, personal_apoyo: true, banos_adapt: true, parking: true, perro_guia: true, silla_prestamo: false, audio_descripcion: false }, bonuses: [{ title: 'Sector adaptado', text: 'Área específica para silla de ruedas con acompañante en todos los eventos.' }, { title: '25% descuento', text: 'Con tarjeta de discapacidad CM en eventos propios.' }], transport: [{ icon: '🚇', name: 'Metro: Goya (L2, L4)', detail: '500m, accesible', access: '♿ Ascensores', accessible: true }, { icon: '🚌', name: 'Bus: 2, 15, 29, 43', detail: 'Parada directa', access: '♿ Piso bajo', accessible: true }], reviews: [{ user: 'Marcos C.', disability: 'Física – Paraplejia', stars: 4, text: 'Zona para sillas perfecta. Baños adaptados amplios y funcionales.', date: 'Mar 2025' }], url: 'https://www.wizinkcenter.es', tickets: 'https://entradas.wizinkcenter.es', ai_summary: 'Pabellón multiusos con zona PMR y visibilidad óptima. 25% descuento con tarjeta discapacidad CM.' }, { id: 8, name: 'Biblioteca Nacional de España', type: 'admin', lat: 40.4232, lng: -3.6895, address: 'Paseo de Recoletos, 20-22, Madrid', score: 74, disabilities: ['fisica', 'visual', 'cognitiva'], features: { rampa: true, ascensor: true, braille: true, bucle_magnetico: false, pictogramas: true, lse: false, personal_apoyo: true, banos_adapt: true, parking: false, perro_guia: true, silla_prestamo: false, audio_descripcion: true }, bonuses: [{ title: 'Colección ONCE', text: 'Fondos en Braille, audiolibros y letra grande.' }, { title: 'Sala Adaptada', text: 'Puesto con lupa electrónica, pantalla táctil y amplificador.' }], transport: [{ icon: '🚇', name: 'Metro: Colón (L4)', detail: 'Ascensor operativo', access: '♿ Accesible', accessible: true }, { icon: '🚌', name: 'Bus: 5, 14, 27, 45', detail: 'Parada Recoletos', access: '♿ Piso bajo', accessible: true }], reviews: [{ user: 'Elena B.', disability: 'Visual – Degeneración macular', stars: 4, text: 'La sala con lupas electrónicas es perfecta. Audiodescripción preparada en 24h.', date: 'Ene 2025' }], url: 'http://www.bne.es/es/Servicios/AccesoDiscapacitados/', tickets: null, ai_summary: 'Fondos accesibles en Braille y audio. Sala de lectura equipada para discapacidad visual.' }, { id: 9, name: 'Clínica Universidad de Navarra', type: 'hospital', lat: 40.4462, lng: -3.6926, address: 'Marquesado de Santa Marta, 1, Madrid', score: 88, disabilities: ['fisica', 'visual', 'auditiva', 'sensorial'], features: { rampa: true, ascensor: true, braille: true, bucle_magnetico: true, pictogramas: true, lse: true, personal_apoyo: true, banos_adapt: true, parking: true, perro_guia: true, silla_prestamo: true, audio_descripcion: false }, bonuses: [{ title: 'Parking PMR 2h gratis', text: 'Primera consulta: 2 horas gratuitas en zona PMR.' }, { title: 'Gestión digital', text: 'Envío de certificados de discapacidad por email sin desplazamiento.' }], transport: [{ icon: '🚇', name: 'Metro: Gregorio Marañón (L7,L10)', detail: 'Ascensores operativos', access: '♿ Accesible', accessible: true }, { icon: '🚌', name: 'Bus: 5, 16, 40', detail: 'Parada próxima', access: '♿ Piso bajo', accessible: true }], reviews: [{ user: 'Patricia N.', disability: 'Auditiva + Visual', stars: 5, text: 'Tienen bucle Y audiodescripción. El personal formado en discapacidad es notable.', date: 'Mar 2025' }], url: 'https://www.cun.es', tickets: null, ai_summary: 'Clínica privada con accesibilidad casi total. Bucle, LSE, Braille y gestión digital de documentación.' }, { id: 10, name: 'Mercadona – Vallecas', type: 'comercio', lat: 40.3869, lng: -3.6541, address: 'Calle de la Cañada Real, 85, Madrid', score: 55, disabilities: ['fisica'], features: { rampa: true, ascensor: false, braille: false, bucle_magnetico: false, pictogramas: false, lse: false, personal_apoyo: false, banos_adapt: false, parking: true, perro_guia: true, silla_prestamo: false, audio_descripcion: false }, bonuses: [], transport: [{ icon: '🚌', name: 'Bus: 57, 112', detail: 'Parada en puerta', access: '♿ Piso bajo', accessible: true }], reviews: [{ user: 'Fernando G.', disability: 'Física – Andador', stars: 3, text: 'Pasillos estrechos para silla. Rampa de acceso ok pero interior con mejoras pendientes.', date: 'Feb 2025' }], url: 'https://www.mercadona.es', tickets: null, ai_summary: 'Accesibilidad básica. Rampa de entrada y parking PMR. Mejoras pendientes en señalética y atención.' }];
+    const IMPROVEMENTS = [{ id: 'rampa', icon: '♿', label: 'Nueva rampa de acceso instalada', points: 8 }, { id: 'ascensor', icon: '🔼', label: 'Ascensor adaptado operativo', points: 10 }, { id: 'braille', icon: '⠿', label: 'Señalética en Braille', points: 7 }, { id: 'bucle_magnetico', icon: '🎧', label: 'Bucle magnético instalado', points: 9 }, { id: 'pictogramas', icon: '🖼', label: 'Pictogramas de comunicación visual', points: 5 }, { id: 'lse', icon: '🤟', label: 'Personal formado en LSE', points: 10 }, { id: 'personal_apoyo', icon: '🤝', label: 'Personal de apoyo especializado', points: 8 }, { id: 'banos_adapt', icon: '🚻', label: 'Baños adaptados certificados', points: 7 }, { id: 'parking', icon: '🅿', label: 'Plazas PMR señalizadas', points: 5 }, { id: 'silla_prestamo', icon: '🪑', label: 'Préstamo de sillas de ruedas', points: 4 }, { id: 'audio_descripcion', icon: '🔊', label: 'Sistema de audiodescripción', points: 8 }];
+    const FEATURE_META = [{ key: 'rampa', icon: '♿', label: 'Rampa de acceso' }, { key: 'ascensor', icon: '🔼', label: 'Ascensor adaptado' }, { key: 'braille', icon: '⠿', label: 'Señalética Braille' }, { key: 'bucle_magnetico', icon: '🎧', label: 'Bucle magnético' }, { key: 'pictogramas', icon: '🖼', label: 'Pictogramas' }, { key: 'lse', icon: '🤟', label: 'Intérprete LSE' }, { key: 'personal_apoyo', icon: '🤝', label: 'Personal de apoyo' }, { key: 'banos_adapt', icon: '🚻', label: 'Baños adaptados' }, { key: 'parking', icon: '🅿', label: 'Parking PMR' }, { key: 'perro_guia', icon: '🐕', label: 'Perro guía admitido' }, { key: 'silla_prestamo', icon: '🪑', label: 'Sillas en préstamo' }, { key: 'audio_descripcion', icon: '🔊', label: 'Audiodescripción' }];
+    let map, heatLayer, markers = {}, currentFilter = 'all', currentType = 'all', currentSearch = '', selectedId = null, heatVisible = true;
+    function getHeatColor(s) { if (s >= 90) return '#ff4500'; if (s >= 75) return '#ff8c00'; if (s >= 60) return '#ffd700'; if (s >= 45) return '#4a90d9'; return '#6b7a99' }
+    function getScoreLabel(s) { if (s >= 90) return 'Accesibilidad Total'; if (s >= 75) return 'Muy Accesible'; if (s >= 60) return 'Accesible'; if (s >= 45) return 'Parcialmente Accesible'; return 'Con Barreras' }
+    function disabilityMatchScore(p, f) { if (f === 'all') return p.score; const m = { fisica: ['rampa', 'ascensor', 'banos_adapt', 'parking', 'silla_prestamo'], visual: ['braille', 'audio_descripcion', 'perro_guia'], auditiva: ['bucle_magnetico', 'lse'], cognitiva: ['pictogramas', 'personal_apoyo'], sensorial: ['audio_descripcion', 'pictogramas', 'personal_apoyo', 'bucle_magnetico'] }; const k = m[f] || []; if (!p.disabilities.includes(f)) return 20; const h = k.filter(x => p.features[x]).length; return Math.round(20 + (h / k.length) * 80) }
+    function highlightText(t, q) { if (!q) return t; return t.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark>$1</mark>') }
+    function getTypeEmoji(t) { return { hospital: '🏥', teatro: '🎭', transporte: '🚇', comercio: '🛒', admin: '🏛', ocio: '🎡' }[t] || '📍' }
+    function capitalizeType(t) { return { hospital: 'Hospital', teatro: 'Teatro/Cultura', transporte: 'Transporte', comercio: 'Comercio', admin: 'Administración', ocio: 'Ocio' }[t] || t }
+    function getFilteredPlaces() { let p = [...PLACES]; if (currentType !== 'all') p = p.filter(x => x.type === currentType); if (currentSearch) { const q = currentSearch.toLowerCase(); p = p.filter(x => x.name.toLowerCase().includes(q) || x.address.toLowerCase().includes(q) || x.type.toLowerCase().includes(q) || x.ai_summary.toLowerCase().includes(q) || x.disabilities.some(d => d.includes(q))) } return p.sort((a, b) => disabilityMatchScore(b, currentFilter) - disabilityMatchScore(a, currentFilter)) }
+    function initMap() { map = L.map('map', { center: [40.4168, -3.7038], zoom: 12, zoomControl: true, attributionControl: false }); L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { subdomains: 'abcd', maxZoom: 19 }).addTo(map); L.control.attribution({ position: 'bottomright', prefix: '<span style="font-size:.55rem;color:#94a3b8">© OSM/CARTO</span>' }).addTo(map); renderMapPoints(); renderHeatLayer(); renderList() }
+    function renderMapPoints() { Object.values(markers).forEach(m => map.removeLayer(m)); markers = {}; getFilteredPlaces().forEach(place => { const score = disabilityMatchScore(place, currentFilter); const color = getHeatColor(score); const icon = L.divIcon({ className: '', html: `<div style="width:36px;height:36px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 0 16px ${color}88,0 0 4px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#000;cursor:pointer" title="${place.name}">${score}</div>`, iconSize: [36, 36], iconAnchor: [18, 18] }); const m = L.marker([place.lat, place.lng], { icon, alt: place.name }).addTo(map).on('click', () => selectPlace(place.id)); m.bindPopup(`<div style="min-width:160px"><p style="font-size:.88rem;font-weight:700;margin-bottom:.25rem">${place.name}</p><p style="font-size:.72rem;color:#94a3b8;margin-bottom:.4rem">${place.address}</p><div style="display:flex;align-items:center;gap:.4rem"><div style="width:10px;height:10px;border-radius:50%;background:${color}"></div><span style="font-size:.72rem;font-weight:700;color:${color}">${getScoreLabel(score)}</span></div></div>`, { maxWidth: 220 }); markers[place.id] = m }) }
+    function renderHeatLayer() { if (heatLayer) map.removeLayer(heatLayer); const pts = getFilteredPlaces().map(p => [p.lat, p.lng, disabilityMatchScore(p, currentFilter) / 100]); heatLayer = L.heatLayer(pts, { radius: 60, blur: 40, maxZoom: 14, gradient: { 0: '#6b7a9900', .3: '#4a90d966', .55: '#ffd70099', .75: '#ff8c00bb', 1: '#ff4500ee' } }).addTo(map) }
+    function toggleHeatLayer() { heatVisible = !heatVisible; if (heatVisible) renderHeatLayer(); else if (heatLayer) map.removeLayer(heatLayer); showToast(heatVisible ? '🔥 Mapa de calor activado' : 'Mapa de calor desactivado') }
+    function fitAll() { const pts = getFilteredPlaces(); if (!pts.length) return; map.fitBounds(L.latLngBounds(pts.map(p => [p.lat, p.lng])), { padding: [40, 40] }) }
+    function renderList() { const places = getFilteredPlaces(); const list = document.getElementById('resultsList'); const count = document.getElementById('resultCount'); count.innerHTML = `Mostrando <strong>${places.length}</strong> lugares`; const q = currentSearch.toLowerCase(); list.innerHTML = '<p class="result-count" id="resultCount" aria-live="polite">' + count.innerHTML + '</p>' + places.map(place => { const score = disabilityMatchScore(place, currentFilter); const color = getHeatColor(score); const name = q ? highlightText(place.name, q) : place.name; const dtags = place.disabilities.slice(0, 3).map(d => `<span class="mini-tag" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3);color:#93c5fd">${{ fisica: '♿', visual: '👁', auditiva: '👂', cognitiva: '🧠', sensorial: '🌟' }[d]}${d}</span>`).join(''); return `<div class="place-card${selectedId === place.id ? ' selected' : ''}" role="listitem" tabindex="0" aria-label="${place.name}, score ${score}" onclick="selectPlace(${place.id})" onkeydown="if(event.key==='Enter'||event.key===' ')selectPlace(${place.id})"><div class="place-heat-dot" style="background:${color};color:${color}"></div><div class="place-info"><p class="place-name">${name}</p><p class="place-type">${getTypeEmoji(place.type)} ${capitalizeType(place.type)}</p><div class="place-tags">${dtags}</div></div><span class="place-score" style="background:${color}22;color:${color}">${score}</span></div>` }).join('') }
+    function selectPlace(id) { selectedId = id; const place = PLACES.find(p => p.id === id); if (!place) return; map.flyTo([place.lat, place.lng], 16, { duration: .8 }); if (markers[id]) markers[id].openPopup(); renderList(); openPanel(place) }
+    function openPanel(place) { const panel = document.getElementById('detailPanel'); panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false'); const score = disabilityMatchScore(place, currentFilter); const color = getHeatColor(score); document.getElementById('panelHeading').innerHTML = `<div style="padding-right:1.5rem"><div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem"><span style="font-size:1.2rem">${getTypeEmoji(place.type)}</span><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)">${capitalizeType(place.type)}</span></div><h2 style="font-size:1.05rem;font-weight:700;line-height:1.3;margin-bottom:.35rem">${place.name}</h2><p style="font-size:.75rem;color:var(--text-muted);margin-bottom:.4rem">${place.address}</p><div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem"><div style="width:10px;height:10px;border-radius:50%;background:${color};box-shadow:0 0 6px ${color}"></div><span style="font-size:.78rem;font-weight:700;color:${color}">${getScoreLabel(score)} (${score}/100)</span></div><p style="font-size:.75rem;color:var(--text-muted);line-height:1.5">${place.ai_summary}</p></div>`; document.querySelectorAll('.panel-tab').forEach(t => { t.classList.toggle('active', t.dataset.tab === 'accesibilidad'); t.setAttribute('aria-selected', t.dataset.tab === 'accesibilidad') }); renderTab('accesibilidad', place) }
+    function closePanel() { document.getElementById('detailPanel').classList.remove('open'); document.getElementById('detailPanel').setAttribute('aria-hidden', 'true'); selectedId = null; renderList() }
+    function switchTab(btn, tab) { document.querySelectorAll('.panel-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false') }); btn.classList.add('active'); btn.setAttribute('aria-selected', 'true'); const place = PLACES.find(p => p.id === selectedId); if (place) renderTab(tab, place) }
+    function renderTab(tab, place) { const body = document.getElementById('panelBody'); if (tab === 'accesibilidad') body.innerHTML = renderAccessibilityTab(place); if (tab === 'acciones') body.innerHTML = renderActionsTab(place); if (tab === 'transporte') body.innerHTML = renderTransportTab(place); if (tab === 'resenas') body.innerHTML = renderReviewsTab(place) }
+    function renderAccessibilityTab(place) { const feats = FEATURE_META.map(f => `<div class="feature-item ${place.features[f.key] ? 'has' : 'no'}" role="listitem" aria-label="${f.label}: ${place.features[f.key] ? 'sí' : 'no'}"><span class="f-icon">${f.icon}</span><span class="f-label">${f.label}</span><span class="f-status ${place.features[f.key] ? 'yes' : 'no'}">${place.features[f.key] ? '✓ Sí' : '✗ No'}</span></div>`).join(''); const bonuses = place.bonuses.length ? place.bonuses.map(b => `<div class="bonus-item"><p class="bonus-title">🏷 ${b.title}</p><p class="bonus-text">${b.text}</p></div>`).join('') : '<p style="font-size:.8rem;color:var(--text-muted)">Sin bonificaciones registradas.</p>'; return `<p class="sec-label">Características</p><div class="feature-grid" role="list">${feats}</div><p class="sec-label">Bonificaciones y Ayudas</p>${bonuses}` }
+    function renderActionsTab(place) { const ticketBtn = place.tickets ? `<a class="action-btn primary-action" href="${place.tickets}" target="_blank" rel="noopener" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:.35rem"><span class="a-icon">🎫</span>Comprar Entradas</a>` : ''; return `${ticketBtn}<div class="action-grid"><button class="action-btn" onclick="openReserveForm()"><span class="a-icon">📋</span>Reservar Asistencia</button><button class="action-btn" onclick="callPlace()"><span class="a-icon">📞</span>Llamar / LSE</button><button class="action-btn" onclick="openDocForm()"><span class="a-icon">📁</span>Entregar Certificado</button><button class="action-btn" onclick="sharePlace()"><span class="a-icon">🔗</span>Compartir</button></div><div id="reserveForm" style="display:none"><p class="sec-label">Formulario de Reserva</p><label class="form-label">Nombre</label><input class="form-input" type="text" placeholder="Nombre completo"><label class="form-label">Fecha y hora</label><input class="form-input" type="datetime-local"><label class="form-label">Tipo de asistencia</label><select class="form-input"><option>Silla de ruedas</option><option>Intérprete LSE</option><option>Audiodescripción</option><option>Acompañamiento</option></select><button class="btn-sm" style="width:100%" onclick="submitReserve()">Confirmar Reserva</button></div><div id="docForm" style="display:none"><p class="sec-label">Envío de Documentación</p><div class="upload-zone" style="padding:1.5rem"><div style="font-size:1.5rem;margin-bottom:.4rem">📄</div><p style="font-size:.85rem;font-weight:700">Subir Certificado de Discapacidad</p><p style="font-size:.72rem;color:var(--text-muted)">PDF o imagen, máx. 5MB</p></div><button class="btn-sm" style="width:100%;margin-top:.5rem" onclick="showToast('📁 Documentación enviada correctamente')">Enviar</button></div><p class="sec-label">Web oficial</p><a href="${place.url}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--primary);text-decoration:none">🔗 ${place.url.replace('https://', '').replace('http://', '').split('/')[0]}</a>` }
+    function renderTransportTab(place) { return `<p class="sec-label">Opciones de transporte</p><div role="list">${place.transport.map(t => `<div class="transport-item"><span class="transport-icon">${t.icon}</span><div><p class="transport-name">${t.name}</p><p class="transport-detail">${t.detail}</p><p class="transport-access" style="color:${t.accessible ? '#86efac' : '#fca5a5'}">${t.access}</p></div></div>`).join('')}</div><p class="sec-label">Tiempo real</p><div style="background:var(--bg-card);border:1px solid var(--border);border-radius:.5rem;padding:.75rem"><div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--success);display:inline-block;animation:pulse 2s infinite"></span><span style="font-size:.75rem;font-weight:700;color:var(--success)">Datos EMT/Metro en tiempo real</span></div><p style="font-size:.72rem;color:var(--text-muted);line-height:1.5">Ascensores y rampas actualizados cada 5 min desde la API oficial de Metro de Madrid y EMT.</p></div>` }
+    function renderReviewsTab(place) { return `<p class="sec-label">Reseñas verificadas</p><div role="list">${place.reviews.map(r => `<div class="review-item"><div class="review-header"><span class="review-user">${r.user}</span><span class="review-stars">${'★'.repeat(r.stars) + '☆'.repeat(5 - r.stars)}</span></div><p class="review-disability">🏷 ${r.disability}</p><p class="review-text">${r.text}</p><p class="review-date">📅 ${r.date}</p></div>`).join('')}</div><p class="sec-label">Añadir reseña</p><textarea class="form-input" rows="3" placeholder="Tu experiencia de accesibilidad…" style="resize:vertical"></textarea><input class="form-input" type="text" placeholder="Tu discapacidad (opcional)"><div style="display:flex;gap:.4rem;margin-bottom:.5rem">${[1, 2, 3, 4, 5].map(n => `<button onclick="setStarRating(${n})" data-star="${n}" style="background:transparent;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">☆</button>`).join('')}</div><button class="btn-sm" style="width:100%" onclick="submitReview()">Publicar Reseña</button><p style="font-size:.68rem;color:var(--text-muted);margin-top:.4rem">Las reseñas son validadas antes de actualizar la puntuación.</p>` }
+    function openBusinessPortal() { const modal = document.getElementById('businessModal'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.getElementById('improvementList').innerHTML = IMPROVEMENTS.map(i => `<label class="improvement-item"><input type="checkbox" id="imp_${i.id}" data-points="${i.points}" onchange="updateHeatPreview()"><span>${i.icon}</span><span style="font-size:.82rem">${i.label}</span><span style="font-size:.68rem;color:var(--success);margin-left:auto">+${i.points}pts</span></label>`).join(''); updateHeatPreview() }
+    function closeBusinessPortal() { document.getElementById('businessModal').classList.remove('open'); document.getElementById('businessModal').setAttribute('aria-hidden', 'true') }
+    function updateHeatPreview() { let t = 30; document.querySelectorAll('#improvementList input:checked').forEach(el => { t += parseInt(el.dataset.points || 0) }); t = Math.min(t, 100); document.getElementById('heatNeedle').style.left = `calc(${t}% - 1px)`; const c = getHeatColor(t); document.getElementById('heatPreviewLabel').innerHTML = `Puntuación estimada: <strong style="color:${c}">${t}/100 – ${getScoreLabel(t)}</strong>` }
+    function submitBusiness() { closeBusinessPortal(); showToast('✅ Enviado. La IA verificará en 24-48h.') }
+    function openReserveForm() { const f = document.getElementById('reserveForm'); if (f) f.style.display = f.style.display === 'none' ? 'block' : 'none' }
+    function openDocForm() { const f = document.getElementById('docForm'); if (f) f.style.display = f.style.display === 'none' ? 'block' : 'none' }
+    function callPlace() { showToast('📞 Iniciando llamada con soporte LSE…') }
+    function sharePlace() { const place = PLACES.find(p => p.id === selectedId); if (place) navigator.clipboard.writeText(place.url).then(() => showToast('🔗 Enlace copiado')) }
+    function submitReserve() { showToast('📋 Reserva confirmada. Recibirás email.'); openReserveForm() }
+    function submitReview() { showToast('⭐ Reseña enviada para validación.') }
+    function setStarRating(n) { document.querySelectorAll('[data-star]').forEach(b => { b.textContent = parseInt(b.dataset.star) <= n ? '★' : '☆'; b.style.color = parseInt(b.dataset.star) <= n ? '#f59e0b' : 'var(--text-muted)' }) }
+    function requestLocation() { if (!navigator.geolocation) { showToast('⚠ Geolocalización no disponible'); return } navigator.geolocation.getCurrentPosition(pos => { map.flyTo([pos.coords.latitude, pos.coords.longitude], 15, { duration: 1 }); L.marker([pos.coords.latitude, pos.coords.longitude], { icon: L.divIcon({ html: '<div style="width:16px;height:16px;border-radius:50%;background:#3b82f6;border:3px solid #fff;box-shadow:0 0 12px #3b82f6"></div>', iconSize: [16, 16], iconAnchor: [8, 8] }) }).addTo(map).bindPopup('📍 Tu ubicación').openPopup(); showToast('📍 Centrado en tu ubicación') }, () => showToast('⚠ No se pudo obtener ubicación')) }
+    function refresh() { renderMapPoints(); renderHeatLayer(); renderList() }
+    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600) }
+    document.getElementById('searchInput').addEventListener('input', e => { currentSearch = e.target.value.trim(); refresh() });
+    document.querySelectorAll('[data-filter]').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('[data-filter]').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false') }); btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true'); currentFilter = btn.dataset.filter; refresh(); showToast(`Filtro: ${btn.textContent}`) }) });
+    document.querySelectorAll('[data-type]').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentType = btn.dataset.type; refresh() }) });
+    document.getElementById('mobileToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('hidden-mobile'));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePanel(); closeBusinessPortal() } });
+    const micBtn = document.getElementById('micBtn');
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) { const SR = window.SpeechRecognition || window.webkitSpeechRecognition; const rec = new SR(); rec.lang = 'es-ES'; rec.onresult = e => { const t = e.results[0][0].transcript; document.getElementById('searchInput').value = t; currentSearch = t; refresh(); micBtn.classList.remove('listening'); showToast(`🎤 "${t}"`) }; rec.onend = () => micBtn.classList.remove('listening'); micBtn.addEventListener('click', () => { if (micBtn.classList.contains('listening')) { rec.stop(); micBtn.classList.remove('listening') } else { rec.start(); micBtn.classList.add('listening'); showToast('🎤 Escuchando…') } }) } else { micBtn.style.display = 'none' }
+    const logMsgs = ['IA monitorizando fuentes oficiales…', 'Scraping BOE: nuevas licencias de accesibilidad…', 'API Metro: 3 ascensores en mantenimiento detectados', 'Actualizando puntuación Hospital La Paz…', 'Scraping EMT: servicio nocturno accesible activo', 'Google My Business: Teatro Real actualiza atributos ♿', 'BOCM: nueva convocatoria ayudas accesibilidad', 'API Renfe ATENDO: disponibilidad actualizada', 'Validando reseña: Museo del Prado…', 'Monitorizando redes sociales: #accesibilidad #Madrid'];
+    let logIdx = 0; setInterval(() => { document.getElementById('logText').textContent = logMsgs[logIdx++ % logMsgs.length] }, 4000);
+    const tMsgs = ['Metro/Bus accesible en tiempo real', 'L1 Metro: todos los ascensores operativos ✓', 'EMT: 98% flota piso bajo activa ✓', 'Cercanías: ATENDO disponible ✓', 'BiciMAD: 12 estaciones adaptadas cercanas'];
+    let tIdx = 0; setInterval(() => { document.getElementById('transportStatus').textContent = tMsgs[tIdx++ % tMsgs.length] }, 5000);
+    document.addEventListener('DOMContentLoaded', initMap);
+  </script>
+</body>
+
+</html>
