@@ -1,80 +1,55 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KAP@CS | PROYECTO FINAL</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/kpacs.js" defer></script>
+    <title>Hero Banner</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .hero img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+        @media (max-width: 768px) {
+            .hero {
+                height: 50vh;
+            }
+            .hero img {
+                width: 90%;
+            }
+        }
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .hero {
+                height: 70vh;
+            }
+            .hero img {
+                width: 80%;
+            }
+        }
+        @media (min-width: 1201px) {
+            .hero {
+                height: 100vh;
+            }
+            .hero img {
+                width: 70%;
+            }
+        }
+    </style>
 </head>
-
-<body class="standard-font">
-
-    <header>
-        <div class="logo-area">
-            KP@CS
-        </div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="talento.html">Talento</a></li>
-                <li><a href="lugares.html">Lugares</a></li>
-                <li><a href="recursos.html">Recursos</a></li>
-                <li><a href="contacto.html" id="nav-contact">Contacto</a></li>
-                <li><a href="chat.html">Chat</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- MODAL DE ACCESO -->
-    <div id="auth-overlay" class="hidden">
-        <section id="registro__login">
-            <span id="close-auth">&times;</span>
-            <h2 id="auth-title">Acceso KPC</h2>
-
-            <!-- Contenedor de Inputs -->
-            <div id="auth-inputs" class="hidden">
-                <input type="text" placeholder="Usuario o Email" class="input-kpc">
-                <div class="password-wrapper">
-                    <input type="password" id="password-field" placeholder="Contraseña" class="input-kpc">
-                    <img src="img/eye__off.svg" id="toggle-password" alt="Ver">
-                </div>
-                <button class="btn-kpc submit-btn" id="btn-submit">Enviar Datos</button>
-            </div>
-
-            <!-- Botones de Selección -->
-            <div id="main-auth-btns">
-                <button class="btn-kpc" id="btn-login-view">Inicio Sesión</button>
-                <button class="btn-kpc" id="btn-register-view">Registro</button>
-            </div>
-        </section>
+<body>
+    <div class="hero">
+        <img src="team.jpg" alt="Team Image">
     </div>
-
-
-
-    <main id="main-content">
-        <section class="home-banner">
-
-        </section>
-        <section id="talent">
-            <h2>Talento Capaces</h2>
-            <p>Espacio dedicado a visibilizar las capacidades y el potencial de cada individuo del equipo.</p>
-        </section>
-        <section id="places">
-            <h2>Lugares Accesibles</h2>
-            <p>Mapa y listado de entornos diseñados bajo criterios de inclusión total.</p>
-        </section>
-        <section id="resources">
-            <h2>Recursos Técnicos</h2>
-            <p>Descarga de guías, protocolos de accesibilidad y assets del proyecto KPC.</p>
-            <button class="btn-kpc">Ver Repositorio</button>
-        </section>
-    </main>
-
 </body>
-
 </html>
